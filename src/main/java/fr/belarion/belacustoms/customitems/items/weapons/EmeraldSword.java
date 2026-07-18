@@ -47,9 +47,9 @@ public class EmeraldSword implements CustomItem, WeaponBonus, ExtraDurability {
         ItemTexture tex = textures.get(ID).orElse(new ItemTexture(Material.DIAMOND_SWORD, (short) 0));
         return new ItemBuilder(tex.getMaterial())
                 .durability(tex.getDurability())
-                .emeraldName("Epee", false)
+                .emeraldName("Épée", false)
                 .progression(false)
-                .loreLine("&7Degats ameliores.")
+                .loreLine("&7Dégâts améliorés.")
                 .tier(ItemTier.EMERALD)
                 .customId(ID)
                 .build();

@@ -41,9 +41,9 @@ public class ReinforcedEmeraldSword implements CustomItem, WeaponBonus {
         ItemTexture tex = textures.get(ID).orElse(new ItemTexture(Material.DIAMOND_SWORD, (short) 0));
         return new ItemBuilder(tex.getMaterial())
                 .durability(tex.getDurability())
-                .emeraldName("Epee", true)
+                .emeraldName("Épée", true)
                 .progression(true)
-                .loreLine("&7Degats superieurs.")
+                .loreLine("&7Dégâts supérieurs.")
                 .unbreakableTag()
                 .unbreakable(true)
                 .tier(ItemTier.EMERALD_RENFORCE)
