@@ -123,7 +123,7 @@ public class BelaCustoms extends JavaPlugin {
     }
 
     private void registerListeners() {
-        // Table d'Enchantement Emeraude / Enclume Emeraude
+        // Table d'Enchantement Émeraude / Enclume Émeraude
         getServer().getPluginManager().registerEvents(new EnchantTableListener(), this);
         getServer().getPluginManager().registerEvents(new EmeraldAnvilListener(), this);
 
