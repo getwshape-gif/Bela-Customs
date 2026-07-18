@@ -22,6 +22,14 @@ import java.util.List;
  * - insensibles à TOUTES les explosions (TNT / Creeper / autres) : ce sont
  *   des blocs premium résistants aux explosions, jamais des blocs
  *   totalement indestructibles.
+ *
+ * Cette protection s'applique au Material EMERALD_BLOCK dans son ensemble,
+ * ce qui couvre donc AUSSI le Bloc d'Émeraude Renforcé une fois posé (voir
+ * ReinforcedEmeraldBlock) : Bukkit 1.8 ne conserve pas le NBT d'un item sur
+ * le bloc pose (pas de tile entity pour un bloc plein), donc un Bloc
+ * d'Émeraude Renforcé posé est un EMERALD_BLOCK comme les autres et
+ * beneficie automatiquement de cette meme resistance aux explosions/pistons
+ * et de la regle "cassable uniquement a la pioche".
  * - impossibles à déplacer par un piston.
  * - cassables normalement par un joueur avec une pioche (comme n'importe
  *   quel bloc solide), en respectant les protections/claims externes
