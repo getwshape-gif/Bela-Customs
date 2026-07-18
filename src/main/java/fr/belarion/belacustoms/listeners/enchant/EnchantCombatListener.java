@@ -15,9 +15,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Gere l'Aimantation (Magnet) cote loots de mobs : si l'arme du tueur porte
- * Aimantation, les drops partent directement dans son inventaire au lieu
- * de tomber au sol.
+ * Gere deux Custom Enchants lies a la mort d'une creature :
+ * - Aimantation (Magnet) : si l'arme du tueur la porte, les drops partent
+ *   directement dans son inventaire au lieu de tomber au sol.
+ * - XP Boost : si l'arme du tueur la porte, l'experience vanilla obtenue
+ *   sur le kill est doublee (+100%). Ne touche jamais aux drops/loot,
+ *   uniquement a l'experience (getDroppedExp/setDroppedExp), et fonctionne
+ *   sur toute creature vanilla donnant de l'XP puisqu'elle multiplie la
+ *   valeur deja calculee par le jeu (0 reste 0 sur les creatures qui n'en
+ *   donnent pas).
  */
 public class EnchantCombatListener implements Listener {
 
@@ -29,6 +35,11 @@ public class EnchantCombatListener implements Listener {
 
         ItemStack weapon = killer.getItemInHand();
         if (!ItemTierUtil.isEmeraldTier(weapon)) return;
+
+        if (EnchantStorage.hasEnchant(weapon, CustomEnchant.XP_BOOST)) {
+            event.setDroppedExp(event.getDroppedExp() * 2);
+        }
+
         if (!EnchantStorage.hasEnchant(weapon, CustomEnchant.MAGNET)) return;
 
         List<ItemStack> drops = event.getDrops();
