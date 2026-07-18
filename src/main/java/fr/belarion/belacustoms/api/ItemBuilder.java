@@ -41,6 +41,7 @@ public class ItemBuilder {
     private String customId;
     private ItemTier tier;
     private final List<EnchantEntry> enchants = new ArrayList<>();
+    private boolean customEnchantsTag = true;
 
     private static class EnchantEntry {
         Enchantment enchantment;
@@ -153,6 +154,17 @@ public class ItemBuilder {
     }
 
     /**
+     * Desactive la ligne finale obligatoire "&d✔ Custom enchants" (voir
+     * build()). Reserve aux custom items qui ne sont ni un outil, ni une
+     * arme, ni une armure (ex: Coffre en Émeraude) : cette ligne n'a de
+     * sens que pour du stuff eligible aux Custom Enchants.
+     */
+    public ItemBuilder noCustomEnchantsTag() {
+        this.customEnchantsTag = false;
+        return this;
+    }
+
+    /**
      * Marque l'item avec un tier Émeraude (voir ItemTier / ItemTierUtil).
      * C'est ce tag, caché en NBT/lore, que lit l'Enclume Émeraude pour
      * accepter l'item et que le système de Custom Enchants (EffectManager,
@@ -187,11 +199,15 @@ public class ItemBuilder {
             }
             finalLore.addAll(section);
         }
-        if (!finalLore.isEmpty()) {
-            finalLore.add("");
+        if (customEnchantsTag) {
+            if (!finalLore.isEmpty()) {
+                finalLore.add("");
+            }
+            // Ligne finale obligatoire imposee par le cahier des charges,
+            // desactivable via noCustomEnchantsTag() pour les items qui n'y
+            // sont pas eligibles (ex: Coffre en Émeraude).
+            finalLore.add(ColorUtil.c("&d✔ Custom enchants"));
         }
-        // Ligne finale obligatoire imposee par le cahier des charges
-        finalLore.add(ColorUtil.c("&d✔ Custom enchants"));
         meta.setLore(finalLore);
 
         for (EnchantEntry entry : enchants) {
