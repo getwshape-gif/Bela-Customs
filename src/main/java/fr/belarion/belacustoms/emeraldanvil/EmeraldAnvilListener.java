@@ -26,9 +26,9 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import java.util.Map;
 
 /**
- * Gere l'Enclume Emeraude : ouverture (clic droit sur Sea Lantern), la
+ * Gère l'Enclume Émeraude : ouverture (clic droit sur Sea Lantern), la
  * combinaison item + livre (custom multi-enchant OU vanilla classique),
- * et empeche l'usage d'une vraie enclume vanilla sur du stuff emeraude.
+ * et empêche l'usage d'une vraie enclume vanilla sur du stuff émeraude.
  */
 public class EmeraldAnvilListener implements Listener {
 
@@ -46,7 +46,7 @@ public class EmeraldAnvilListener implements Listener {
     public void onClick(InventoryClickEvent event) {
         String title = event.getView().getTitle();
 
-        // Empeche de traiter du stuff emeraude dans une VRAIE enclume vanilla.
+        // Empêche de traiter du stuff émeraude dans une VRAIE enclume vanilla.
         if (event.getInventory() != null && event.getInventory().getType() == InventoryType.ANVIL
                 && !EmeraldAnvilGUI.TITLE.equals(title)) {
             ItemStack current = event.getCurrentItem();
@@ -99,9 +99,9 @@ public class EmeraldAnvilListener implements Listener {
 
     /**
      * Reproduit le Shift + Click vanilla depuis l'inventaire du joueur : un
-     * item Emeraude part automatiquement dans le slot Item, un livre
+     * item Émeraude part automatiquement dans le slot Item, un livre
      * (vanilla ou custom) part automatiquement dans le slot Livre. Tout
-     * autre item, ou un slot deja occupe, reste bloque.
+     * autre item, ou un slot déjà occupé, reste bloqué.
      */
     private void handleShiftClickIntoAnvil(InventoryClickEvent event, Inventory top) {
         event.setCancelled(true);
@@ -159,7 +159,7 @@ public class EmeraldAnvilListener implements Listener {
                 player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1f, 1f);
                 return;
             }
-            // result == OK (tier deja verifie plus haut)
+            // result == OK (tier déjà vérifié plus haut)
         } else if (!(book.getType() == Material.ENCHANTED_BOOK && book.getItemMeta() instanceof EnchantmentStorageMeta)) {
             msg.send(player, "enchants.anvil.invalid-book");
             return;
@@ -192,10 +192,10 @@ public class EmeraldAnvilListener implements Listener {
 
         player.setLevel(player.getLevel() - cost);
 
-        // Comme une vraie enclume : le resultat part directement dans
-        // l'inventaire du joueur, les deux slots d'entree sont vides
-        // immediatement. "base" est retire du GUI avant d'etre donne, il
-        // ne peut donc jamais se retrouver a la fois dans l'enclume et
+        // Comme une vraie enclume : le résultat part directement dans
+        // l'inventaire du joueur, les deux slots d'entrée sont vides
+        // immédiatement. "base" est retiré du GUI avant d'être donné, il
+        // ne peut donc jamais se retrouver à la fois dans l'enclume et
         // dans l'inventaire (pas de duplication possible).
         top.setItem(EmeraldAnvilGUI.SLOT_ITEM, null);
         top.setItem(EmeraldAnvilGUI.SLOT_BOOK, null);
