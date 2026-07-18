@@ -2,6 +2,8 @@ package fr.belarion.belacustoms.api;
 
 import fr.belarion.belacustoms.utils.NBTEditor;
 import fr.belarion.belacustoms.utils.ColorUtil;
+import fr.belarion.belacustoms.utils.ItemTier;
+import fr.belarion.belacustoms.utils.ItemTierUtil;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -36,6 +38,7 @@ public class ItemBuilder {
     private final List<List<String>> loreSections = new ArrayList<>();
     private boolean unbreakable = false;
     private String customId;
+    private ItemTier tier;
     private final List<EnchantEntry> enchants = new ArrayList<>();
 
     private static class EnchantEntry {
@@ -132,6 +135,19 @@ public class ItemBuilder {
         return this;
     }
 
+    /**
+     * Marque l'item avec un tier Emeraude (voir ItemTier / ItemTierUtil).
+     * C'est ce tag, cache en NBT/lore, que lit l'Enclume Emeraude pour
+     * accepter l'item et que le systeme de Custom Enchants (EffectManager,
+     * MiningListener, CombatListener, etc.) lit pour savoir si un item est
+     * eligible aux mecaniques d'enchants. Sans cet appel, un custom item
+     * n'est jamais reconnu comme "tier Emeraude" par ces systemes.
+     */
+    public ItemBuilder tier(ItemTier tier) {
+        this.tier = tier;
+        return this;
+    }
+
     public ItemStack build() {
         ItemStack item = new ItemStack(material, amount);
         if (durability != 0) {
@@ -162,6 +178,10 @@ public class ItemBuilder {
         }
 
         item.setItemMeta(meta);
+
+        if (tier != null) {
+            ItemTierUtil.setTier(item, tier);
+        }
 
         if (unbreakable) {
             item = NBTEditor.setUnbreakable(item);
