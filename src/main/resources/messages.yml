@@ -20,7 +20,7 @@ enchants:
     success: "&7Tu as obtenu &f&l%enchant%"
 
   anvil:
-    need-both: "&cPlace un item Émeraude à gauche et un livre à droite."
+    need-both: "&cPlace un item à gauche, et un livre (ou des Blocs d'Émeraude pour réparer) à droite."
     wrong-tier: "&cLes custom enchants ne s'appliquent que sur du stuff Émeraude."
     wrong-target: "&c%enchant% s'applique uniquement sur : %target%"
     already-has: "&c%item% possède déjà &f%enchant%&c."
@@ -28,6 +28,15 @@ enchants:
     invalid-book: "&cLe livre à droite n'est pas un livre d'enchantement valide."
     success: "&7Enchantement appliqué avec succès."
     protected: "&cLe stuff Émeraude nécessite une Emerald Anvil."
+
+    repair:
+      wrong-currency: "&cSeuls les Blocs d'Émeraude normaux permettent de réparer (pas les Blocs Renforcés)."
+      already-unbreakable: "&cCet item est déjà incassable (Unbreakable), rien à réparer."
+      not-repairable: "&cCet item n'a pas de durabilité à réparer."
+      already-full: "&cCet item est déjà à durabilité maximale."
+      not-enough-blocks: "&cIl te faut &f%amount%&c Bloc(s) d'Émeraude pour réparer cet item."
+      not-enough-levels: "&cIl te manque des niveaux ! (%cost% requis)"
+      success: "&7Item réparé avec succès &7(&f%blocks%&7 Bloc(s) d'Émeraude utilisés)."
 
   blocks:
     need-pickaxe: "&cIl faut une pioche pour casser ce bloc."
