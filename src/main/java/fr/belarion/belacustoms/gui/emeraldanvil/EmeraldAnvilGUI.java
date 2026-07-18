@@ -13,8 +13,14 @@ import org.bukkit.inventory.ItemStack;
  * d'Enchantement Émeraude (gris foncé dominant, bordures gris clair,
  * accents émeraude autour des slots fonctionnels), pour une identité
  * visuelle cohérente entre les deux interfaces.
- * Item émeraude : slot 11. Livre (vanilla ou custom) : slot 15. Forger : slot 13.
- * Prix fixe (custom-enchants.yml costs.emerald-anvil, 30 niveaux par défaut), toujours.
+ * Item à réparer/enchanter : slot 11. Forger : slot 13.
+ * Slot 15 (droite) : DOUBLE USAGE, determine par ce qui y est place :
+ *   - Livre (vanilla ou custom) -> applique un enchant (prix fixe,
+ *     costs.emerald-anvil, 30 niveaux par defaut).
+ *   - Blocs d'Émeraude normaux -> repare l'item de gauche (prix variable
+ *     en blocs selon les degats + prix fixe en niveaux,
+ *     costs.emerald-anvil-repair, 30 niveaux par defaut). Voir
+ *     EmeraldAnvilListener pour la logique complete.
  */
 public final class EmeraldAnvilGUI {
 
@@ -40,13 +46,17 @@ public final class EmeraldAnvilGUI {
     }
 
     public static ItemStack buildConfirmButton() {
-        int cost = BelaCustoms.get().getEnchantSettings().getEmeraldAnvilCost();
+        int enchantCost = BelaCustoms.get().getEnchantSettings().getEmeraldAnvilCost();
+        int repairCost = BelaCustoms.get().getEnchantSettings().getRepairCostLevels();
         return GuiUtil.button(Material.ANVIL, ChatColor.GREEN, "✦ Forger ✦",
                 GuiUtil.SEPARATOR,
-                ChatColor.GRAY + "Item Émeraude à gauche,",
+                ChatColor.GRAY + "Enchanter : item Émeraude à gauche,",
                 ChatColor.GRAY + "livre (custom ou vanilla) à droite.",
+                ChatColor.YELLOW + "Coût" + ChatColor.WHITE + " " + enchantCost + " niveaux",
                 "",
-                ChatColor.YELLOW + "Coût" + ChatColor.WHITE + " " + cost + " niveaux",
+                ChatColor.GRAY + "Réparer : item à gauche,",
+                ChatColor.GRAY + "Blocs d'Émeraude normaux à droite.",
+                ChatColor.YELLOW + "Coût" + ChatColor.WHITE + " " + repairCost + " niveaux + blocs",
                 GuiUtil.SEPARATOR);
     }
 }
