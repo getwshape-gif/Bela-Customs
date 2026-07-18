@@ -6,10 +6,10 @@ import fr.belarion.belacustoms.utils.ItemTierUtil;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Point d'entree unique pour toute verification de compatibilite entre un
- * item et un Custom Enchant. Utilise par l'Enclume Emeraude et par tout
- * futur systeme d'application d'enchant : evite de repeter la meme logique
- * (tier + cible + anti-doublon) a plusieurs endroits.
+ * Point d'entrée unique pour toute vérification de compatibilité entre un
+ * item et un Custom Enchant. Utilisé par l'Enclume Émeraude et par tout
+ * futur système d'application d'enchant : évite de répéter la même logique
+ * (tier + cible + anti-doublon) à plusieurs endroits.
  */
 public final class CompatibilityManager {
 
