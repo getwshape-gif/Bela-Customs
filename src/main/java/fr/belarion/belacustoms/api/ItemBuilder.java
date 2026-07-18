@@ -6,6 +6,7 @@ import fr.belarion.belacustoms.utils.ItemTier;
 import fr.belarion.belacustoms.utils.ItemTierUtil;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -16,8 +17,8 @@ import java.util.List;
  * Construit les ItemStack des custom items en respectant le format visuel
  * impose par le cahier des charges :
  *
- *   Nom   : &e[ETOILE] &7Nom de l'item en &a/&2 (emeraude / emeraude renforcee)
- *   Lore  : description + ligne de progression + "&aCustom enchants autorises"
+ *   Nom   : &e[ETOILE] &7Nom de l'item en &a/&2 (Émeraude / Émeraude Renforcé)
+ *   Lore  : description + ligne de progression + "&d✔ Custom enchants"
  *
  * Regle des items renforces : Unbreakable via NBT (pas de perte de durabilite),
  * appliquee automatiquement si unbreakable(true) est appele.
@@ -63,12 +64,12 @@ public class ItemBuilder {
 
     /**
      * Definit le nom affiche a partir du "nom simple" de l'item (ex: "Hammer").
-     * Format impose : &e[ETOILE] &7<nom> en &aEmeraude [&2Renforce]
+     * Format impose : &e[ETOILE] &7<nom> en &aÉmeraude [&2Renforcé]
      */
     public ItemBuilder emeraldName(String itemName, boolean reinforced) {
-        StringBuilder name = new StringBuilder("&e").append(STAR).append(" &7").append(itemName).append(" en &aEmeraude");
+        StringBuilder name = new StringBuilder("&e").append(STAR).append(" &7").append(itemName).append(" en &aÉmeraude");
         if (reinforced) {
-            name.append(" &2Renforce");
+            name.append(" &2Renforcé");
         }
         this.displayName = ColorUtil.c(name.toString());
         return this;
@@ -102,21 +103,26 @@ public class ItemBuilder {
 
     /**
      * Ajoute la ligne de progression standard :
-     *   Emeraude    : &aEmeraude &7> &bDiamant
-     *   Renforce    : &aEmeraude &2Renforce &7> &aEmeraude
+     *   Émeraude    : ◆ &aÉmeraude &7> &bDiamant
+     *   Renforcé    : ◆ &aÉmeraude &2Renforcé &7> &aÉmeraude
      */
     public ItemBuilder progression(boolean reinforced) {
         if (reinforced) {
-            loreLine("&aEmeraude &2Renforce &7> &aEmeraude");
+            loreLine("◆ &aÉmeraude &2Renforcé &7> &aÉmeraude");
         } else {
-            loreLine("&aEmeraude &7> &bDiamant");
+            loreLine("◆ &aÉmeraude &7> &bDiamant");
         }
         return this;
     }
 
-    /** Ajoute la ligne "&aUnbreakable" imposee par le cahier des charges pour les items renforces. */
+    /**
+     * Ajoute la ligne "✓ Unbreakable" imposee par le cahier des charges pour
+     * les items renforces. L'affichage automatique vanilla (en bleu) est
+     * masque via ItemFlag.HIDE_UNBREAKABLE dans build(), afin que cette ligne
+     * personnalisee soit la seule visible.
+     */
     public ItemBuilder unbreakableTag() {
-        loreLine("&aUnbreakable");
+        loreLine("&a✓ Unbreakable");
         return this;
     }
 
@@ -136,12 +142,12 @@ public class ItemBuilder {
     }
 
     /**
-     * Marque l'item avec un tier Emeraude (voir ItemTier / ItemTierUtil).
-     * C'est ce tag, cache en NBT/lore, que lit l'Enclume Emeraude pour
-     * accepter l'item et que le systeme de Custom Enchants (EffectManager,
+     * Marque l'item avec un tier Émeraude (voir ItemTier / ItemTierUtil).
+     * C'est ce tag, caché en NBT/lore, que lit l'Enclume Émeraude pour
+     * accepter l'item et que le système de Custom Enchants (EffectManager,
      * MiningListener, CombatListener, etc.) lit pour savoir si un item est
-     * eligible aux mecaniques d'enchants. Sans cet appel, un custom item
-     * n'est jamais reconnu comme "tier Emeraude" par ces systemes.
+     * éligible aux mécaniques d'enchants. Sans cet appel, un custom item
+     * n'est jamais reconnu comme "tier Émeraude" par ces systèmes.
      */
     public ItemBuilder tier(ItemTier tier) {
         this.tier = tier;
@@ -170,11 +176,19 @@ public class ItemBuilder {
             finalLore.add("");
         }
         // Ligne finale obligatoire imposee par le cahier des charges
-        finalLore.add(ColorUtil.c("&aCustom enchants autorises"));
+        finalLore.add(ColorUtil.c("&d✔ Custom enchants"));
         meta.setLore(finalLore);
 
         for (EnchantEntry entry : enchants) {
             meta.addEnchant(entry.enchantment, entry.level, true);
+        }
+
+        if (unbreakable) {
+            // Masque l'affichage automatique vanilla ("Unbreakable" en bleu) :
+            // seule la ligne personnalisee "&a✓ Unbreakable" du lore doit
+            // apparaitre. La fonctionnalite (item reellement incassable)
+            // reste intacte, ce flag ne touche que le rendu du tooltip.
+            meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         }
 
         item.setItemMeta(meta);
