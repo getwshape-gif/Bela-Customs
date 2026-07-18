@@ -190,6 +190,14 @@ public class EmeraldAnvilListener implements Listener {
                 player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1f, 1f);
                 return;
             }
+            if (result == CompatibilityManager.Result.ARMOR_LIMIT_REACHED) {
+                // Equilibrage PvP : ne modifie pas l'item, le livre reste
+                // intact dans le slot droit (rien n'est consomme).
+                int max = BelaCustoms.get().getEnchantSettings().getMaxArmorEnchants();
+                msg.send(player, "enchants.anvil.armor-limit", "max", String.valueOf(max));
+                player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1f, 1f);
+                return;
+            }
             // result == OK (tier déjà vérifié plus haut)
         } else if (!(right.getType() == Material.ENCHANTED_BOOK && right.getItemMeta() instanceof EnchantmentStorageMeta)) {
             msg.send(player, "enchants.anvil.invalid-book");
