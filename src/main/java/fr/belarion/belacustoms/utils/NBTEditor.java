@@ -124,9 +124,35 @@ public final class NBTEditor {
         }
     }
 
+    public static boolean getBoolean(ItemStack item, String key) {
+        if (!available || item == null) return false;
+        try {
+            Object nmsItem = toNMSCopy(item);
+            Class<?> nmsItemStackClass = nmsClass("ItemStack");
+            boolean hasTag = (boolean) nmsItemStackClass.getMethod("hasTag").invoke(nmsItem);
+            if (!hasTag) return false;
+            Object tag = nmsItemStackClass.getMethod("getTag").invoke(nmsItem);
+            boolean hasKey = (boolean) tag.getClass().getMethod("hasKey", String.class).invoke(tag, key);
+            if (!hasKey) return false;
+            return (boolean) tag.getClass().getMethod("getBoolean", String.class).invoke(tag, key);
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
     /** Marque l'item comme incassable au sens NBT vanilla (tag "Unbreakable"). */
     public static ItemStack setUnbreakable(ItemStack item) {
         return setBoolean(item, "Unbreakable", true);
+    }
+
+    /**
+     * @return true si l'item porte le tag NBT vanilla "Unbreakable" (voir
+     * setUnbreakable()). Utilise notamment par le systeme de reparation de
+     * l'Enclume Emeraude pour rejeter les items renforces (deja incassables,
+     * donc rien a reparer) sans dependre du registre CustomItem.
+     */
+    public static boolean isUnbreakable(ItemStack item) {
+        return getBoolean(item, "Unbreakable");
     }
 
     /** Ecrit l'identifiant interne du custom item dans le NBT (invisible au joueur). */
