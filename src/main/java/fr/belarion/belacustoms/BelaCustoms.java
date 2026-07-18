@@ -9,6 +9,8 @@ import fr.belarion.belacustoms.customitems.config.ItemStatsConfig;
 import fr.belarion.belacustoms.customitems.config.ItemTextureRegistry;
 import fr.belarion.belacustoms.customitems.manager.CustomItemManager;
 import fr.belarion.belacustoms.emeraldanvil.EmeraldAnvilListener;
+import fr.belarion.belacustoms.emeraldchest.EmeraldChestListener;
+import fr.belarion.belacustoms.emeraldchest.EmeraldChestManager;
 import fr.belarion.belacustoms.emeraldenchanttable.EnchantTableListener;
 import fr.belarion.belacustoms.gui.GuiSettings;
 import fr.belarion.belacustoms.listeners.BlockProtectionListener;
@@ -61,6 +63,8 @@ public class BelaCustoms extends JavaPlugin {
     private EffectManager effectManager;
     private AntiDebuffGuardTask antiDebuffGuardTask;
 
+    private EmeraldChestManager emeraldChestManager;
+
     public static BelaCustoms get() {
         return instance;
     }
@@ -78,6 +82,9 @@ public class BelaCustoms extends JavaPlugin {
 
         customItemRegistry = new CustomItemRegistry(itemStatsConfig, itemTextureRegistry);
         customItemManager = new CustomItemManager(customItemRegistry);
+
+        emeraldChestManager = new EmeraldChestManager(this);
+        emeraldChestManager.load();
 
         recipeManager = new RecipeManager(this);
         recipeManager.registerAll();
@@ -98,6 +105,9 @@ public class BelaCustoms extends JavaPlugin {
         }
         if (antiDebuffGuardTask != null) {
             antiDebuffGuardTask.cancel();
+        }
+        if (emeraldChestManager != null) {
+            emeraldChestManager.save();
         }
         getLogger().info("Bela-Customs desactive.");
     }
@@ -129,6 +139,9 @@ public class BelaCustoms extends JavaPlugin {
 
         // Protection des blocs custom (partagee table + enclume)
         getServer().getPluginManager().registerEvents(new BlockProtectionListener(), this);
+
+        // Coffre en Émeraude (inventaire virtuel 54 slots + resistance a 5 explosions)
+        getServer().getPluginManager().registerEvents(new EmeraldChestListener(emeraldChestManager), this);
 
         // Mecaniques de Custom Enchants a evenement specifique
         getServer().getPluginManager().registerEvents(new EnchantMiningListener(), this);
@@ -201,4 +214,5 @@ public class BelaCustoms extends JavaPlugin {
     public CustomItemRegistry getCustomItemRegistry() { return customItemRegistry; }
     public CustomItemManager getCustomItemManager() { return customItemManager; }
     public RecipeManager getRecipeManager() { return recipeManager; }
+    public EmeraldChestManager getEmeraldChestManager() { return emeraldChestManager; }
 }
