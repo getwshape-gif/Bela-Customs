@@ -22,3 +22,9 @@ vein-miner-max-blocks: 64
 # presque à 0). Un item moins endommagé coûte proportionnellement moins de
 # blocs (minimum 1 dès qu'il a subi le moindre dégât).
 repair-max-blocks: 4
+
+# Équilibrage PvP : nombre maximum de Custom Enchants qu'une pièce d'armure
+# (casque/plastron/jambières/bottes) peut recevoir. Les armes et outils
+# custom (épée, pioche, hache, pelle, houe) ne sont PAS concernés par cette
+# limite : ils peuvent recevoir un nombre illimité de Custom Enchants.
+max-armor-enchants: 2

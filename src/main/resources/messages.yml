@@ -24,6 +24,7 @@ enchants:
     wrong-tier: "&cLes custom enchants ne s'appliquent que sur du stuff Émeraude."
     wrong-target: "&c%enchant% s'applique uniquement sur : %target%"
     already-has: "&c%item% possède déjà &f%enchant%&c."
+    armor-limit: "&cCette pièce d'armure possède déjà le maximum de &f%max%&c Custom Enchants."
     not-enough-levels: "&cIl te manque des niveaux ! (%cost% requis)"
     invalid-book: "&cLe livre à droite n'est pas un livre d'enchantement valide."
     success: "&7Enchantement appliqué avec succès."
