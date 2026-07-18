@@ -16,9 +16,10 @@ import org.bukkit.inventory.meta.ItemMeta;
  *
  * Disposition fixe et volontairement centree : chaque page peut contenir
  * jusqu'a 14 custom enchants, places exclusivement dans les slots
- * 11,12,13,14,15,16,17,20,21,22,23,24,25,26. Les boutons de navigation
- * (9 = page precedente, 18 = page suivante) restent en dehors de cette
- * zone d'affichage afin qu'elle ne soit jamais amputee. Cette disposition
+ * 10,11,12,13,14,15,16,19,20,21,22,23,24,25. Les boutons de navigation
+ * (9 = page precedente, 26 = page suivante, en bas a droite) restent en
+ * dehors de cette zone d'affichage afin qu'elle ne soit jamais amputee.
+ * Cette disposition
  * est identique sur TOUTES les pages, y compris les futures : ajouter un
  * 15e enchant dans CustomEnchant remplit simplement la page courante puis,
  * une fois pleine, cree automatiquement une page suivante qui reprend
@@ -30,15 +31,18 @@ public final class EnchantLibraryGUI {
 
     public static final int SLOT_BACK = 4;
     public static final int SLOT_PREV = 9;
-    public static final int SLOT_NEXT = 18;
+    public static final int SLOT_NEXT = 26;
 
     /**
      * Disposition fixe et definitive des enchants, identique sur toutes les
-     * pages : 14 slots exactement, jamais plus, jamais moins.
+     * pages : 14 slots exactement, jamais plus, jamais moins. Decalee d'une
+     * colonne vers la gauche pour laisser la colonne de droite entierement
+     * libre : la fleche "page suivante" (SLOT_NEXT) y est ancree en bas a
+     * droite, symetrique de la fleche "page precedente" en bas a gauche.
      */
     private static final int[] DISPLAY_SLOTS = new int[]{
-            11, 12, 13, 14, 15, 16, 17,
-            20, 21, 22, 23, 24, 25, 26
+            10, 11, 12, 13, 14, 15, 16,
+            19, 20, 21, 22, 23, 24, 25
     };
 
     private EnchantLibraryGUI() {}
@@ -51,7 +55,7 @@ public final class EnchantLibraryGUI {
         if (page > maxPage) page = maxPage;
 
         Inventory inv = Bukkit.createInventory(null, 27, TITLE);
-        GuiUtil.fillPremiumBackground(inv, new int[]{0, 8, 9, 18});
+        GuiUtil.fillPremiumBackground(inv, new int[]{0, 8, 9, 26});
 
         ItemStack back = GuiUtil.button(Material.ARROW, ChatColor.WHITE, "Retour",
                 GuiUtil.SEPARATOR, ChatColor.GRAY + "Retour a la table.", GuiUtil.SEPARATOR);
