@@ -39,7 +39,7 @@ public class EmeraldShovel implements CustomItem, MiningTool, ExtraDurability {
 
     @Override
     public double getDurabilityMultiplier() {
-        return 1.5;
+        return 2.5;
     }
 
     @Override
