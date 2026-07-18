@@ -4,6 +4,7 @@ import fr.belarion.belacustoms.api.CustomItem;
 import fr.belarion.belacustoms.customitems.config.ItemStatsConfig;
 import fr.belarion.belacustoms.customitems.config.ItemTextureRegistry;
 import fr.belarion.belacustoms.customitems.items.armor.EmeraldArmorItem;
+import fr.belarion.belacustoms.customitems.items.misc.EmeraldChest;
 import fr.belarion.belacustoms.customitems.items.misc.ReinforcedEmeraldBlock;
 import fr.belarion.belacustoms.customitems.items.tools.EmeraldAxe;
 import fr.belarion.belacustoms.customitems.items.tools.EmeraldHammer;
@@ -65,6 +66,9 @@ public class CustomItemRegistry {
 
         // Commerce
         register(new ReinforcedEmeraldBlock());
+
+        // Blocs premium
+        register(new EmeraldChest());
 
         // Note : la Table d'Enchantement Émeraude, l'Enclume Émeraude et
         // leurs GUI vivent dans les packages emeraldenchanttable / emeraldanvil
