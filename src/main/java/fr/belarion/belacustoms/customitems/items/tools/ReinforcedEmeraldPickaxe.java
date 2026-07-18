@@ -48,7 +48,7 @@ public class ReinforcedEmeraldPickaxe implements CustomItem {
                 .durability(tex.getDurability())
                 .emeraldName("Pioche", true)
                 .progression(true)
-                .loreLines("&7Minage ultra rapide.", "&7Maitrise les blocs resistants.")
+                .loreLines("&7Minage ultra rapide.", "&7Maîtrise les blocs résistants.")
                 .unbreakableTag()
                 .enchant(Enchantment.DIG_SPEED, 2)
                 .unbreakable(true)

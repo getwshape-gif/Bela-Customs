@@ -49,7 +49,7 @@ public class EmeraldHoe implements CustomItem, ReplantingHoe, ExtraDurability {
                 .durability(tex.getDurability())
                 .emeraldName("Houe", false)
                 .progression(false)
-                .loreLine("&7Recolte et replante automatiquement.")
+                .loreLine("&7Récolte et replante automatiquement.")
                 .tier(ItemTier.EMERALD)
                 .customId(ID)
                 .build();

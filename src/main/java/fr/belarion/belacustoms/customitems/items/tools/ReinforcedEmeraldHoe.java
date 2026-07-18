@@ -43,7 +43,7 @@ public class ReinforcedEmeraldHoe implements CustomItem, ReplantingHoe {
                 .durability(tex.getDurability())
                 .emeraldName("Houe", true)
                 .progression(true)
-                .loreLine("&7Recolte en zone &a3x3&7.")
+                .loreLine("&7Récolte en zone &a3x3&7.")
                 .unbreakableTag()
                 .unbreakable(true)
                 .tier(ItemTier.EMERALD_RENFORCE)

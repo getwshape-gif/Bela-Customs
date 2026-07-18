@@ -39,7 +39,7 @@ public class ReinforcedEmeraldAxe implements CustomItem, TreeFeller {
                 .durability(tex.getDurability())
                 .emeraldName("Hache", true)
                 .progression(true)
-                .loreLine("&7Coupe les arbres entierement.")
+                .loreLine("&7Coupe les arbres entièrement.")
                 .unbreakableTag()
                 .unbreakable(true)
                 .tier(ItemTier.EMERALD_RENFORCE)

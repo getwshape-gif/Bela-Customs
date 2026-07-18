@@ -46,7 +46,7 @@ public class EmeraldPickaxe implements CustomItem, ExtraDurability {
                 .durability(tex.getDurability())
                 .emeraldName("Pioche", false)
                 .progression(false)
-                .loreLine("&7Minage ameliore.")
+                .loreLine("&7Minage amélioré.")
                 .enchant(Enchantment.DIG_SPEED, 1)
                 .tier(ItemTier.EMERALD)
                 .customId(ID)
