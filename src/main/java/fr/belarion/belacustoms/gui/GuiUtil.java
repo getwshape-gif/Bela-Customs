@@ -12,9 +12,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Helpers partages par tous les GUI du plugin pour garder une identite
- * visuelle unique : vitres premium (gris fonce / gris clair, accents
- * emeraude), separateurs, boutons, et le format standard des descriptions
+ * Helpers partagés par tous les GUI du plugin pour garder une identité
+ * visuelle unique : vitres premium (gris foncé / gris clair, accents
+ * émeraude), séparateurs, boutons, et le format standard des descriptions
  * de Custom Enchants.
  */
 public final class GuiUtil {
@@ -22,12 +22,12 @@ public final class GuiUtil {
     public static final String SEPARATOR = ChatColor.DARK_GREEN + "" + ChatColor.STRIKETHROUGH
             + "                    ";
 
-    /** Vitre teintee verte (donnee 13 = vert emeraude), utilisee en accent premium. */
+    /** Vitre teintée verte (donnée 13 = vert émeraude), utilisée en accent premium. */
     public static final short GLASS_GREEN = 13;
     /** Vitre vert clair, utilisee pour accentuer certains bords. */
     public static final short GLASS_LIME = 5;
     public static final short GLASS_BLACK = 15;
-    /** Vitre gris fonce : couleur de fond dominante du style premium. */
+    /** Vitre gris foncé : couleur de fond dominante du style premium. */
     public static final short GLASS_DARK_GRAY = 7;
     /** Vitre gris clair / argente : bordures du style premium. */
     public static final short GLASS_LIGHT_GRAY = 8;
@@ -44,7 +44,7 @@ public final class GuiUtil {
         return pane;
     }
 
-    /** Remplit tout l'inventaire de vitres vert emeraude (fond simple, encore utilise par l'Enclume). */
+    /** Remplit tout l'inventaire de vitres vert émeraude (fond simple, encore utilisé par l'Enclume). */
     public static void fillBackground(Inventory inv) {
         ItemStack filler = pane(GLASS_GREEN);
         for (int i = 0; i < inv.getSize(); i++) {
@@ -53,10 +53,10 @@ public final class GuiUtil {
     }
 
     /**
-     * Fond premium partage par la Table d'Enchantement et la Bibliotheque :
-     * gris fonce dominant, bordures (premiere et derniere rangee) en gris
-     * clair, et quelques vitres emeraude en accent sur les slots fournis.
-     * Les slots fonctionnels places apres cet appel ecrasent naturellement
+     * Fond premium partagé par la Table d'Enchantement et la Bibliothèque :
+     * gris foncé dominant, bordures (première et dernière rangée) en gris
+     * clair, et quelques vitres émeraude en accent sur les slots fournis.
+     * Les slots fonctionnels placés après cet appel écrasent naturellement
      * les vitres.
      */
     public static void fillPremiumBackground(Inventory inv, int[] accentSlots) {
@@ -100,9 +100,9 @@ public final class GuiUtil {
 
     /**
      * Format standard et unique de la description d'un Custom Enchant,
-     * utilise a la fois par les livres (EnchantBookUtil) et la Bibliotheque
-     * d'Enchants (EnchantLibraryGUI) : description, compatibilite, puis
-     * le tag "Custom enchant" en violet. Aucune rarete, aucune ligne
+     * utilisé à la fois par les livres (EnchantBookUtil) et la Bibliothèque
+     * d'Enchants (EnchantLibraryGUI) : description, compatibilité, puis
+     * le tag "Custom enchant" en violet. Aucune rareté, aucune ligne
      * inutile.
      */
     public static List<String> buildEnchantLore(CustomEnchant enchant) {
