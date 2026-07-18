@@ -27,4 +27,4 @@ repair-max-blocks: 4
 # (casque/plastron/jambières/bottes) peut recevoir. Les armes et outils
 # custom (épée, pioche, hache, pelle, houe) ne sont PAS concernés par cette
 # limite : ils peuvent recevoir un nombre illimité de Custom Enchants.
-max-armor-enchants: 2
+max-armor-enchants: 3
