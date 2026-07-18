@@ -5,6 +5,7 @@ import fr.belarion.belacustoms.api.ExtraDurability;
 import fr.belarion.belacustoms.api.ItemBuilder;
 import fr.belarion.belacustoms.customitems.config.ItemTexture;
 import fr.belarion.belacustoms.customitems.config.ItemTextureRegistry;
+import fr.belarion.belacustoms.utils.ItemTier;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -47,6 +48,7 @@ public class EmeraldPickaxe implements CustomItem, ExtraDurability {
                 .progression(false)
                 .loreLine("&7Minage ameliore.")
                 .enchant(Enchantment.DIG_SPEED, 1)
+                .tier(ItemTier.EMERALD)
                 .customId(ID)
                 .build();
     }

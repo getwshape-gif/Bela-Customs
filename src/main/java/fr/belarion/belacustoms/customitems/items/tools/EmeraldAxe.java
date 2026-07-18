@@ -7,6 +7,7 @@ import fr.belarion.belacustoms.api.MiningTool;
 import fr.belarion.belacustoms.customitems.config.ItemStatsConfig;
 import fr.belarion.belacustoms.customitems.config.ItemTexture;
 import fr.belarion.belacustoms.customitems.config.ItemTextureRegistry;
+import fr.belarion.belacustoms.utils.ItemTier;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -54,6 +55,7 @@ public class EmeraldAxe implements CustomItem, MiningTool, ExtraDurability {
                 .emeraldName("Hache", false)
                 .progression(false)
                 .loreLine("&7Coupe le bois en zone &a1x3&7.")
+                .tier(ItemTier.EMERALD)
                 .customId(ID)
                 .build();
     }

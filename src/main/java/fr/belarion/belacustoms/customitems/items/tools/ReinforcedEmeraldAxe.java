@@ -5,6 +5,7 @@ import fr.belarion.belacustoms.api.ItemBuilder;
 import fr.belarion.belacustoms.api.TreeFeller;
 import fr.belarion.belacustoms.customitems.config.ItemTexture;
 import fr.belarion.belacustoms.customitems.config.ItemTextureRegistry;
+import fr.belarion.belacustoms.utils.ItemTier;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -41,6 +42,7 @@ public class ReinforcedEmeraldAxe implements CustomItem, TreeFeller {
                 .loreLine("&7Coupe les arbres entierement.")
                 .unbreakableTag()
                 .unbreakable(true)
+                .tier(ItemTier.EMERALD_RENFORCE)
                 .customId(ID)
                 .build();
     }

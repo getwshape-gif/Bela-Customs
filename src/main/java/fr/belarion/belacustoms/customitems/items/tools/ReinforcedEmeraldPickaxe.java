@@ -4,6 +4,7 @@ import fr.belarion.belacustoms.api.CustomItem;
 import fr.belarion.belacustoms.api.ItemBuilder;
 import fr.belarion.belacustoms.customitems.config.ItemTexture;
 import fr.belarion.belacustoms.customitems.config.ItemTextureRegistry;
+import fr.belarion.belacustoms.utils.ItemTier;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -51,6 +52,7 @@ public class ReinforcedEmeraldPickaxe implements CustomItem {
                 .unbreakableTag()
                 .enchant(Enchantment.DIG_SPEED, 2)
                 .unbreakable(true)
+                .tier(ItemTier.EMERALD_RENFORCE)
                 .customId(ID)
                 .build();
     }

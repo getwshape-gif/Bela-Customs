@@ -7,6 +7,7 @@ import fr.belarion.belacustoms.api.ReplantingHoe;
 import fr.belarion.belacustoms.customitems.config.ItemStatsConfig;
 import fr.belarion.belacustoms.customitems.config.ItemTexture;
 import fr.belarion.belacustoms.customitems.config.ItemTextureRegistry;
+import fr.belarion.belacustoms.utils.ItemTier;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -49,6 +50,7 @@ public class EmeraldHoe implements CustomItem, ReplantingHoe, ExtraDurability {
                 .emeraldName("Houe", false)
                 .progression(false)
                 .loreLine("&7Recolte et replante automatiquement.")
+                .tier(ItemTier.EMERALD)
                 .customId(ID)
                 .build();
     }

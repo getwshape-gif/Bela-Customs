@@ -6,6 +6,7 @@ import fr.belarion.belacustoms.api.MiningTool;
 import fr.belarion.belacustoms.customitems.config.ItemStatsConfig;
 import fr.belarion.belacustoms.customitems.config.ItemTexture;
 import fr.belarion.belacustoms.customitems.config.ItemTextureRegistry;
+import fr.belarion.belacustoms.utils.ItemTier;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -45,6 +46,7 @@ public class ReinforcedEmeraldShovel implements CustomItem, MiningTool {
                 .loreLine("&7Mine les blocs en zone &a5x5&7.")
                 .unbreakableTag()
                 .unbreakable(true)
+                .tier(ItemTier.EMERALD_RENFORCE)
                 .customId(ID)
                 .build();
     }

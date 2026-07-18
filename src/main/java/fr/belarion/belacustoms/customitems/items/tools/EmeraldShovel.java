@@ -7,6 +7,7 @@ import fr.belarion.belacustoms.api.MiningTool;
 import fr.belarion.belacustoms.customitems.config.ItemStatsConfig;
 import fr.belarion.belacustoms.customitems.config.ItemTexture;
 import fr.belarion.belacustoms.customitems.config.ItemTextureRegistry;
+import fr.belarion.belacustoms.utils.ItemTier;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -49,6 +50,7 @@ public class EmeraldShovel implements CustomItem, MiningTool, ExtraDurability {
                 .emeraldName("Pelle", false)
                 .progression(false)
                 .loreLine("&7Mine les blocs en zone &a3x3&7.")
+                .tier(ItemTier.EMERALD)
                 .customId(ID)
                 .build();
     }
