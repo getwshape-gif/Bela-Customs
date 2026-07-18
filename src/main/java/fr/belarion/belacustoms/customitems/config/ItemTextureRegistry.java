@@ -59,7 +59,7 @@ public class ItemTextureRegistry {
             }
             Material material = Material.matchMaterial(materialName);
             if (material == null) {
-                plugin.getLogger().warning("[custom-items.yml] Materiau inconnu pour '" + key + "' : " + materialName);
+                plugin.getLogger().warning("[custom-items.yml] Matériau inconnu pour '" + key + "' : " + materialName);
                 continue;
             }
             textures.put(key.toUpperCase(Locale.ROOT), new ItemTexture(material, (short) durability));
