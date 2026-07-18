@@ -19,6 +19,8 @@ public final class EnchantSettings {
     private int enchantTableCost;
     private int emeraldAnvilCost;
     private int veinMinerMaxBlocks;
+    private int repairCostLevels;
+    private int repairMaxBlocks;
 
     public EnchantSettings(BelaCustoms plugin) {
         this.plugin = plugin;
@@ -34,9 +36,13 @@ public final class EnchantSettings {
         enchantTableCost = cfg.getInt("costs.enchant-table", 60);
         emeraldAnvilCost = cfg.getInt("costs.emerald-anvil", 30);
         veinMinerMaxBlocks = cfg.getInt("vein-miner-max-blocks", 64);
+        repairCostLevels = cfg.getInt("costs.emerald-anvil-repair", 30);
+        repairMaxBlocks = Math.max(1, cfg.getInt("repair-max-blocks", 4));
     }
 
     public int getEnchantTableCost() { return enchantTableCost; }
     public int getEmeraldAnvilCost() { return emeraldAnvilCost; }
     public int getVeinMinerMaxBlocks() { return veinMinerMaxBlocks; }
+    public int getRepairCostLevels() { return repairCostLevels; }
+    public int getRepairMaxBlocks() { return repairMaxBlocks; }
 }
