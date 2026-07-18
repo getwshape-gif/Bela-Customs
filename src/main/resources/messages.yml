@@ -1,0 +1,47 @@
+# =====================================================
+#  Bela-Customs - messages.yml
+#  Tous les messages envoyes aux joueurs. Codes couleur "&".
+#  Placeholders : %nom% (remplaces dynamiquement selon le contexte).
+# =====================================================
+
+prefix: "&8[&2Bela-Customs&8] &7"
+
+player-only: "&cCette commande est reservee aux joueurs."
+no-permission: "&cTu n'as pas la permission d'utiliser cette commande."
+reload: "&aConfiguration de Bela-Customs rechargee."
+
+enchants:
+  table-block-received: "&7Emerald Enchanting Table recue. Place-la puis clique-droit dessus."
+  anvil-block-received: "&7Emerald Anvil recue. Place-la puis clique-droit dessus."
+
+  table:
+    need-book: "&cPlace un livre vierge dans la case prevue."
+    not-enough-levels: "&cIl te manque des niveaux ! (%cost% requis, tu en as %current%)"
+    success: "&7Tu as obtenu &f&l%enchant%"
+
+  anvil:
+    need-both: "&cPlace un item Emeraude a gauche et un livre a droite."
+    wrong-tier: "&cLes custom enchants ne s'appliquent que sur du stuff Emeraude."
+    wrong-target: "&c%enchant% s'applique uniquement sur : %target%"
+    already-has: "&c%item% possede deja &f%enchant%&c."
+    not-enough-levels: "&cIl te manque des niveaux ! (%cost% requis)"
+    invalid-book: "&cLe livre a droite n'est pas un livre d'enchantement valide."
+    success: "&7Enchantement applique avec succes."
+    protected: "&cLe stuff Emeraude necessite une Emerald Anvil."
+
+  blocks:
+    need-pickaxe: "&cIl faut une pioche pour casser ce bloc."
+
+items:
+  usage: "&7Usage: &f/citem give <joueur> <id> [quantite] &7| &f/citem list &7| &f/citem id"
+  unknown-subcommand: "&cSous-commande inconnue. Usage: /citem give|list|id"
+  give-usage: "&cUsage: /citem give <joueur> <id> [quantite]"
+  player-not-found: "&cJoueur introuvable ou hors ligne : %player%"
+  invalid-amount: "&cQuantite invalide : %amount%"
+  unknown-id: "&cIdentifiant de custom item inconnu : %id%"
+  give-success-sender: "&aDonne %amount%x %id% a %player%."
+  give-success-target: "&aVous avez recu %amount%x %id%."
+  list: "&7Custom items disponibles : &f%ids%"
+  id-not-custom: "&7L'item en main n'est pas un custom item."
+  id-result: "&7Identifiant : &f%id%"
+  player-only-subcommand: "&cCette sous-commande n'est utilisable que par un joueur."

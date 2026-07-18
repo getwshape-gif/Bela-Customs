@@ -1,0 +1,55 @@
+# =====================================================
+#  Bela-Customs - custom-items.yml
+#  Statistiques des Custom Items (tier Emeraude / Emeraude Renforce) et
+#  mapping de textures (resource pack 1.8).
+# =====================================================
+
+stats:
+  hammer:
+    emerald.radius: 1
+    reinforced.radius: 2
+  shovel:
+    emerald.radius: 1
+    reinforced.radius: 2
+  hoe:
+    emerald.radius: 0
+    reinforced.radius: 1
+  axe:
+    # Longueur de la colonne coupee par la Hache Emeraude (bloc vise inclus).
+    emerald.length: 3
+  sword:
+    # Bonus de degats (points de coeur, 1.0 = un demi coeur) par rapport a une epee diamant.
+    emerald.bonus-damage: 3.0
+    reinforced.bonus-damage: 5.0
+  armor:
+    # Reduction de degats supplementaire (pourcentage, 0.05 = 5%) par piece d'armure equipee.
+    emerald.reduction-per-piece: 0.05
+    reinforced.reduction-per-piece: 0.08
+
+# ---------------------------------------------------------------------------
+# Association identifiant interne (le meme que le NBT CustomItemId et que
+# /citem give <id>) -> Material vanilla + Damage Value (durability) unique.
+# Technique CustomModelData "pre-1.13" utilisee par les resource packs
+# Minecraft 1.8 pour afficher un modele 3D distinct par item.
+# ---------------------------------------------------------------------------
+textures:
+  EMERALD_HAMMER: {material: DIAMOND_PICKAXE, durability: 1001}
+  REINFORCED_EMERALD_HAMMER: {material: DIAMOND_PICKAXE, durability: 1002}
+  EMERALD_PICKAXE: {material: DIAMOND_PICKAXE, durability: 1003}
+  REINFORCED_EMERALD_PICKAXE: {material: DIAMOND_PICKAXE, durability: 1004}
+  EMERALD_SHOVEL: {material: DIAMOND_SPADE, durability: 1005}
+  REINFORCED_EMERALD_SHOVEL: {material: DIAMOND_SPADE, durability: 1006}
+  EMERALD_HOE: {material: DIAMOND_HOE, durability: 1007}
+  REINFORCED_EMERALD_HOE: {material: DIAMOND_HOE, durability: 1008}
+  EMERALD_AXE: {material: DIAMOND_AXE, durability: 1009}
+  REINFORCED_EMERALD_AXE: {material: DIAMOND_AXE, durability: 1010}
+  EMERALD_SWORD: {material: DIAMOND_SWORD, durability: 1011}
+  REINFORCED_EMERALD_SWORD: {material: DIAMOND_SWORD, durability: 1012}
+  EMERALD_HELMET: {material: DIAMOND_HELMET, durability: 1013}
+  REINFORCED_EMERALD_HELMET: {material: DIAMOND_HELMET, durability: 1014}
+  EMERALD_CHESTPLATE: {material: DIAMOND_CHESTPLATE, durability: 1015}
+  REINFORCED_EMERALD_CHESTPLATE: {material: DIAMOND_CHESTPLATE, durability: 1016}
+  EMERALD_LEGGINGS: {material: DIAMOND_LEGGINGS, durability: 1017}
+  REINFORCED_EMERALD_LEGGINGS: {material: DIAMOND_LEGGINGS, durability: 1018}
+  EMERALD_BOOTS: {material: DIAMOND_BOOTS, durability: 1019}
+  REINFORCED_EMERALD_BOOTS: {material: DIAMOND_BOOTS, durability: 1020}

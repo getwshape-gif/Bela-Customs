@@ -1,0 +1,15 @@
+# =====================================================
+#  Bela-Customs - config.yml
+#  Reglages generaux, communs a tout le plugin.
+#
+#  Les reglages specifiques aux Custom Enchants et Custom Items se trouvent
+#  respectivement dans custom-enchants.yml et custom-items.yml.
+# =====================================================
+
+# Active/desactive la verification des protections (Factions/WorldGuard/
+# FactionsUUID/GriefPrevention/etc.) avant toute destruction automatique de
+# bloc declenchee par un custom item (hammer, pelle, tree capitator...).
+protection.check-enabled: true
+
+# Active les logs de debug supplementaires dans la console du serveur.
+debug: false

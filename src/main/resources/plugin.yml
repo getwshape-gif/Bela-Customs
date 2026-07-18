@@ -1,0 +1,47 @@
+name: Bela-Customs
+version: 1.0.0
+main: fr.belarion.belacustoms.BelaCustoms
+author: Belarion
+description: >
+  Systeme complet de Custom Items et Custom Enchants tier Emeraude pour serveur
+  PvP Spigot 1.8.x (Table d'Enchantement Emeraude, Enclume Emeraude, outils/armes/
+  armures Emeraude et Emeraude Renforce).
+softdepend: [WorldGuard, Factions, FactionsUUID, GriefPrevention]
+
+commands:
+  belacustoms:
+    description: Commande principale du plugin (reload de la configuration).
+    usage: /belacustoms <reload>
+    permission: belacustoms.admin
+  enchanttable:
+    description: Donne le bloc de la Table d'Enchantement Emeraude.
+    usage: /enchanttable
+    permission: belacustoms.admin
+  enchantanvil:
+    description: Donne le bloc de l'Enclume Emeraude.
+    usage: /enchantanvil
+    permission: belacustoms.admin
+  enchants:
+    description: Ouvre la Bibliotheque des Custom Enchants.
+    usage: /enchants
+    permission: belacustoms.enchants
+    aliases: [enchant, customenchants, customenchant]
+  citem:
+    description: Commande principale du systeme de custom items.
+    usage: /<command> give <joueur> <id> [quantite] | list | id
+    permission: belacustoms.items.admin
+    permission-message: "&cVous n'avez pas la permission d'utiliser cette commande."
+
+permissions:
+  belacustoms.admin:
+    description: Acces aux commandes admin de Bela-Customs (reload, blocs speciaux).
+    default: op
+  belacustoms.enchants:
+    description: Autorise l'ouverture de la Bibliotheque des Custom Enchants via /enchants.
+    default: true
+  belacustoms.items.admin:
+    description: Permet de donner et lister les custom items via /citem.
+    default: op
+  belacustoms.items.use:
+    description: Permet de beneficier des effets des custom items.
+    default: true

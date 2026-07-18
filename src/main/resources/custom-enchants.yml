@@ -1,0 +1,15 @@
+# =====================================================
+#  Bela-Customs - custom-enchants.yml
+#  Reglages du systeme de Custom Enchants (Table d'Enchantement Emeraude,
+#  Enclume Emeraude, Vein Miner).
+# =====================================================
+
+costs:
+  # Table d'Enchantement Emeraude : niveaux requis pour enchanter un livre vierge.
+  enchant-table: 60
+  # Enclume Emeraude : niveaux requis pour combiner un item + un livre (prix fixe).
+  emerald-anvil: 30
+
+# Nombre de blocs maximum casses en une seule fois par l'enchant Vein Miner
+# (protection anti-lag).
+vein-miner-max-blocks: 64
