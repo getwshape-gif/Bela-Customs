@@ -99,6 +99,12 @@ public enum CustomEnchant {
             EnchantTarget.ALL_EQUIPMENT,
             new String[]{"Équivalent Unbreaking IV"},
             Enchantment.DURABILITY, 4
+    ),
+    XP_BOOST(
+            "xp_boost", "XP Boost", ChatColor.GREEN, Material.EXP_BOTTLE,
+            new String[]{"Augmente l'expérience", "obtenue en tuant", "les créatures."},
+            EnchantTarget.SWORD,
+            new String[]{"+100% d'expérience obtenue", "(XP vanilla × 2)"}
     );
 
     private final String id;
