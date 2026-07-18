@@ -39,7 +39,7 @@ public final class EnchantSettings {
         veinMinerMaxBlocks = cfg.getInt("vein-miner-max-blocks", 64);
         repairCostLevels = cfg.getInt("costs.emerald-anvil-repair", 30);
         repairMaxBlocks = Math.max(1, cfg.getInt("repair-max-blocks", 4));
-        maxArmorEnchants = Math.max(1, cfg.getInt("max-armor-enchants", 2));
+        maxArmorEnchants = Math.max(1, cfg.getInt("max-armor-enchants", 3));
     }
 
     public int getEnchantTableCost() { return enchantTableCost; }
