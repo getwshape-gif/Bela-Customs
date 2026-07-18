@@ -12,21 +12,21 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Classe generique pour les 4 pieces d'armure emeraude (et leurs variantes
- * renforcees). Le materiau de base reste DIAMOND_* : cela garantit des
- * points d'armure vanilla deja superieurs a toute autre armure, la
- * progression "superieure au diamant" etant ensuite assuree par le bonus
- * de reduction de degats supplementaire (ArmorBonus, applique par
+ * Classe générique pour les 4 pièces d'armure émeraude (et leurs variantes
+ * renforcées). Le matériau de base reste DIAMOND_* : cela garantit des
+ * points d'armure vanilla déjà supérieurs à toute autre armure, la
+ * progression "supérieure au diamant" étant ensuite assurée par le bonus
+ * de réduction de dégâts supplémentaire (ArmorBonus, appliqué par
  * ItemCombatListener) - l'API Bukkit 1.8 ne proposant pas d'attribute
- * modifiers natifs (ajoutes en 1.13) pour creer un materiau d'armure
- * totalement inedit.
+ * modifiers natifs (ajoutés en 1.13) pour créer un matériau d'armure
+ * totalement inédit.
  */
 public class EmeraldArmorItem implements CustomItem, ArmorBonus, ExtraDurability {
 
     public enum Slot {
         HELMET("Casque", Material.DIAMOND_HELMET),
         CHESTPLATE("Plastron", Material.DIAMOND_CHESTPLATE),
-        LEGGINGS("Jambieres", Material.DIAMOND_LEGGINGS),
+        LEGGINGS("Jambières", Material.DIAMOND_LEGGINGS),
         BOOTS("Bottes", Material.DIAMOND_BOOTS);
 
         final String displayName;
@@ -81,7 +81,7 @@ public class EmeraldArmorItem implements CustomItem, ArmorBonus, ExtraDurability
                 .durability(tex.getDurability())
                 .emeraldName(slot.displayName, reinforced)
                 .progression(reinforced)
-                .loreLine(reinforced ? "&7Protection superieure." : "&7Protection amelioree.");
+                .loreLine(reinforced ? "&7Protection supérieure." : "&7Protection améliorée.");
         if (reinforced) {
             builder.unbreakableTag().unbreakable(true);
         }
