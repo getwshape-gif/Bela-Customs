@@ -66,9 +66,9 @@ public class CustomItemRegistry {
         // Commerce
         register(new ReinforcedEmeraldBlock());
 
-        // Note : la Table d'Enchantement Emeraude, l'Enclume Emeraude et
+        // Note : la Table d'Enchantement Émeraude, l'Enclume Émeraude et
         // leurs GUI vivent dans les packages emeraldenchanttable / emeraldanvil
-        // / gui et ne doivent PAS etre recrees ici.
+        // / gui et ne doivent PAS être recréées ici.
     }
 
     private void register(CustomItem item) {
