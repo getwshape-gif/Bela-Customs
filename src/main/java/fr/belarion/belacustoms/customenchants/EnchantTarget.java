@@ -3,18 +3,18 @@ package fr.belarion.belacustoms.customenchants;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Categories de compatibilite utilisees par tous les Custom Enchants.
+ * Catégories de compatibilité utilisées par tous les Custom Enchants.
  * Centralise la logique "cet item peut-il recevoir cet enchant" par type.
  */
 public enum EnchantTarget {
 
     BOOTS("Bottes"),
     ARMOR("Toute armure"),
-    SWORD("Epee"),
+    SWORD("Épée"),
     PICKAXE("Pioche"),
     TOOLS("Tous les outils"),
     TOOLS_AND_WEAPONS("Tous les outils et armes"),
-    ALL_EQUIPMENT("Tout equipement");
+    ALL_EQUIPMENT("Tout équipement");
 
     private final String label;
 

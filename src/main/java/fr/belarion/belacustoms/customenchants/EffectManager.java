@@ -33,7 +33,7 @@ import java.util.Set;
  */
 public class EffectManager extends BukkitRunnable {
 
-    /** Duree tres longue (~13h88) utilisee pour simuler un effet permanent. */
+    /** Durée très longue (~13h88) utilisée pour simuler un effet permanent. */
     private static final int LONG_DURATION = 1_000_000;
     /** Si la duree restante d'un effet descend sous ce seuil, on le rafraichit. */
     private static final int REFRESH_THRESHOLD = 40;

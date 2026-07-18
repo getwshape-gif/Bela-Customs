@@ -7,15 +7,15 @@ import org.bukkit.enchantments.Enchantment;
 /**
  * Registre de tous les Custom Enchants du plugin.
  *
- * Pour ajouter un nouvel enchant : il suffit d'ajouter une entree ici avec
- * ses metadonnees (nom, description, cible, effet). Le stockage multi-enchant
- * (EnchantStorage), les GUI (table/bibliotheque) et l'enclume emeraude lisent
+ * Pour ajouter un nouvel enchant : il suffit d'ajouter une entrée ici avec
+ * ses métadonnées (nom, description, cible, effet). Le stockage multi-enchant
+ * (EnchantStorage), les GUI (table/bibliothèque) et l'enclume émeraude lisent
  * automatiquement CustomEnchant.values() : aucune autre classe n'a besoin
- * d'etre modifiee pour un enchant "passif" (potion effect gere par
+ * d'être modifiée pour un enchant "passif" (potion effect géré par
  * EffectManager) ou "vanilla-equivalent" (Fortune/Looting/Unbreaking). Un
- * enchant avec une mecanique tres specifique (Vein Miner, AutoSmelt,
- * Aimantation, Anti Rod, No Fall) necessite en plus un petit bout de logique
- * dans le listener concerne, identifie via son id().
+ * enchant avec une mécanique très spécifique (Vein Miner, AutoSmelt,
+ * Aimantation, Anti Rod, No Fall) nécessite en plus un petit bout de logique
+ * dans le listener concerné, identifié via son id().
  */
 public enum CustomEnchant {
 
@@ -33,27 +33,27 @@ public enum CustomEnchant {
     ),
     FIRE_RESISTANCE(
             "fire_resistance", "Fire Resistance", ChatColor.GOLD, Material.BLAZE_POWDER,
-            new String[]{"Rend le porteur", "totalement immunise", "contre le feu et la lave."},
+            new String[]{"Rend le porteur", "totalement immunisé", "contre le feu et la lave."},
             EnchantTarget.ARMOR,
             new String[]{"Fire Resistance permanent"}
     ),
     NO_FALL(
             "no_fall", "No Fall", ChatColor.GRAY, Material.FEATHER,
-            new String[]{"Absorbe la totalite", "des degats de chute,", "quelle que soit la hauteur."},
+            new String[]{"Absorbe la totalité", "des dégâts de chute,", "quelle que soit la hauteur."},
             EnchantTarget.BOOTS,
-            new String[]{"Aucun degat de chute"}
+            new String[]{"Aucun dégât de chute"}
     ),
     ANTI_ROD(
             "anti_rod", "Anti Rod", ChatColor.DARK_AQUA, Material.FISHING_ROD,
-            new String[]{"Empeche le joueur d'etre", "attire ou desequilibre", "par une canne a peche."},
+            new String[]{"Empêche le joueur d'être", "attiré ou déséquilibré", "par une canne à pêche."},
             EnchantTarget.ARMOR,
-            new String[]{"Immunite totale au knockback", "provoque par une canne a peche"}
+            new String[]{"Immunité totale au knockback", "provoqué par une canne à pêche"}
     ),
     ANTI_DEBUFF(
             "anti_debuff", "Anti Debuff", ChatColor.LIGHT_PURPLE, Material.MILK_BUCKET,
-            new String[]{"Le porteur devient", "immunise contre tous", "les effets negatifs."},
+            new String[]{"Le porteur devient", "immunisé contre tous", "les effets négatifs."},
             EnchantTarget.ARMOR,
-            new String[]{"Immunite : Poison, Slowness,", "Weakness, Blindness, Wither,", "Mining Fatigue, Hunger"}
+            new String[]{"Immunité : Poison, Slowness,", "Weakness, Blindness, Wither,", "Mining Fatigue, Hunger"}
     ),
     HASTE_II(
             "haste2", "Haste II", ChatColor.YELLOW, Material.GOLD_PICKAXE,
@@ -63,19 +63,19 @@ public enum CustomEnchant {
     ),
     MAGNET(
             "magnet", "Aimantation", ChatColor.DARK_PURPLE, Material.NETHER_STAR,
-            new String[]{"Les ressources et les", "butins sont envoyes", "directement dans l'inventaire."},
+            new String[]{"Les ressources et les", "butins sont envoyés", "directement dans l'inventaire."},
             EnchantTarget.TOOLS_AND_WEAPONS,
             new String[]{"Envoi automatique des drops", "en inventaire (sinon au sol)"}
     ),
     AUTOSMELT(
             "autosmelt", "AutoSmelt", ChatColor.RED, Material.FURNACE,
-            new String[]{"Cuit automatiquement", "les minerais mines."},
+            new String[]{"Cuit automatiquement", "les minerais minés."},
             EnchantTarget.PICKAXE,
-            new String[]{"Fer et Or mines sont", "directement cuits en lingots"}
+            new String[]{"Fer et Or minés sont", "directement cuits en lingots"}
     ),
     VEIN_MINER(
             "vein_miner", "Vein Miner", ChatColor.DARK_GREEN, Material.DIAMOND_PICKAXE,
-            new String[]{"Casse instantanement", "tout le filon de minerai", "connecte."},
+            new String[]{"Casse instantanément", "tout le filon de minerai", "connecté."},
             EnchantTarget.PICKAXE,
             new String[]{"Casse le filon de minerai", "complet (jamais les autres blocs)"}
     ),
@@ -83,21 +83,21 @@ public enum CustomEnchant {
             "gem_hunter", "Gem Hunter", ChatColor.GREEN, Material.EMERALD,
             new String[]{"Multiplie grandement", "les gains de minerais."},
             EnchantTarget.PICKAXE,
-            new String[]{"Equivalent Fortune IV"},
+            new String[]{"Équivalent Fortune IV"},
             Enchantment.LOOT_BONUS_BLOCKS, 4
     ),
     SOUL_COLLECTOR(
             "soul_collector", "Soul Collector", ChatColor.DARK_RED, Material.SKULL_ITEM,
-            new String[]{"Les ames vaincues", "abandonnent davantage", "de butin."},
+            new String[]{"Les âmes vaincues", "abandonnent davantage", "de butin."},
             EnchantTarget.SWORD,
-            new String[]{"Equivalent Looting IV"},
+            new String[]{"Équivalent Looting IV"},
             Enchantment.LOOT_BONUS_MOBS, 4
     ),
     ETERNAL(
             "eternal", "Eternal", ChatColor.WHITE, Material.NETHER_STAR,
-            new String[]{"Renforce la durabilite", "de l'equipement de", "facon quasi infinie."},
+            new String[]{"Renforce la durabilité", "de l'équipement de", "façon quasi infinie."},
             EnchantTarget.ALL_EQUIPMENT,
-            new String[]{"Equivalent Unbreaking IV"},
+            new String[]{"Équivalent Unbreaking IV"},
             Enchantment.DURABILITY, 4
     );
 
@@ -142,7 +142,7 @@ public enum CustomEnchant {
     public int getVanillaLevel() { return vanillaLevel; }
     public boolean isVanillaEquivalent() { return vanillaEquivalent != null; }
 
-    /** Ligne de lore visible representant cet enchant applique sur un item. */
+    /** Ligne de lore visible représentant cet enchant appliqué sur un item. */
     public String getTagLine() {
         return color.toString() + ChatColor.BOLD + "✦ " + displayName;
     }

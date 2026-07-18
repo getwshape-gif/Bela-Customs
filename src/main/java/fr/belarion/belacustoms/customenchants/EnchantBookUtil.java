@@ -10,7 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Creation / lecture des livres custom obtenus a la Table d'Enchantement Emeraude. */
+/** Création / lecture des livres custom obtenus à la Table d'Enchantement Émeraude. */
 public final class EnchantBookUtil {
 
     public static final String TAG_KEY = "belench";
@@ -24,7 +24,7 @@ public final class EnchantBookUtil {
 
         List<String> lore = new ArrayList<String>(GuiUtil.buildEnchantLore(enchant));
         lore.add("");
-        lore.add(ChatColor.DARK_GRAY + "A combiner dans l'Enclume Emeraude.");
+        lore.add(ChatColor.DARK_GRAY + "À combiner dans l'Enclume Émeraude.");
         meta.setLore(lore);
         book.setItemMeta(meta);
 
