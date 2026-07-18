@@ -19,20 +19,20 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * GUI de la Table d'Enchantement Emeraude.
- * 27 slots, style premium : gris fonce dominant, bordures gris clair,
- * quelques accents emeraude autour des slots fonctionnels.
- * Livre vierge : slot 13. Bouton Enchanter : slot 22. Bibliotheque : slot 26.
+ * GUI de la Table d'Enchantement Émeraude.
+ * 27 slots, style premium : gris foncé dominant, bordures gris clair,
+ * quelques accents émeraude autour des slots fonctionnels.
+ * Livre vierge : slot 13. Bouton Enchanter : slot 22. Bibliothèque : slot 26.
  */
 public final class EnchantTableGUI {
 
-    public static final String TITLE = ChatColor.DARK_GRAY.toString() + ChatColor.BOLD + "✦ Table Emeraude ✦";
+    public static final String TITLE = ChatColor.DARK_GRAY.toString() + ChatColor.BOLD + "✦ Table Émeraude ✦";
 
     public static final int SLOT_BOOK = 13;
     public static final int SLOT_ENCHANT = 22;
     public static final int SLOT_LIBRARY = 26;
 
-    /** Vitres emeraude decoratives encadrant les slots fonctionnels. */
+    /** Vitres émeraude décoratives encadrant les slots fonctionnels. */
     private static final int[] ACCENT_SLOTS = new int[]{12, 14, 21, 23};
 
     private static final Random RANDOM = new Random();
@@ -42,7 +42,7 @@ public final class EnchantTableGUI {
     public static Inventory build() {
         Inventory inv = Bukkit.createInventory(null, 27, TITLE);
         GuiUtil.fillPremiumBackground(inv, ACCENT_SLOTS);
-        // Avant-derniere case (slot 25) : vitre gris pale pour respecter le design du fond.
+        // Avant-dernière case (slot 25) : vitre gris pâle pour respecter le design du fond.
         inv.setItem(25, GuiUtil.pane(GuiUtil.GLASS_LIGHT_GRAY));
 
         inv.setItem(SLOT_BOOK, null);
@@ -57,19 +57,19 @@ public final class EnchantTableGUI {
         lore.add(GuiUtil.SEPARATOR);
         lore.add("");
         lore.add(ChatColor.GRAY + "Place un livre vierge");
-        lore.add(ChatColor.GRAY + "dans la case prevue.");
+        lore.add(ChatColor.GRAY + "dans la case prévue.");
         lore.add("");
-        lore.add(ChatColor.GREEN + "Cout" + ChatColor.WHITE + " " + BelaCustoms.get().getEnchantSettings().getEnchantTableCost() + " niveaux");
-        lore.add(ChatColor.GREEN + "Gain" + ChatColor.WHITE + " 1 enchant aleatoire");
+        lore.add(ChatColor.GREEN + "Coût" + ChatColor.WHITE + " " + BelaCustoms.get().getEnchantSettings().getEnchantTableCost() + " niveaux");
+        lore.add(ChatColor.GREEN + "Gain" + ChatColor.WHITE + " 1 enchant aléatoire");
         lore.add("");
-        lore.add(ChatColor.DARK_GRAY + "Toutes les chances sont egales.");
+        lore.add(ChatColor.DARK_GRAY + "Toutes les chances sont égales.");
         lore.add(GuiUtil.SEPARATOR);
         return GuiUtil.button(Material.EMERALD, ChatColor.GREEN, "✦ Enchanter ✦",
                 lore.toArray(new String[0]));
     }
 
     public static ItemStack buildLibraryButton() {
-        return GuiUtil.button(Material.BOOK_AND_QUILL, ChatColor.WHITE, "Bibliotheque d'Enchants",
+        return GuiUtil.button(Material.BOOK_AND_QUILL, ChatColor.WHITE, "Bibliothèque d'Enchants",
                 GuiUtil.SEPARATOR,
                 ChatColor.GRAY + "Consulte tous les",
                 ChatColor.GRAY + "custom enchants disponibles.",

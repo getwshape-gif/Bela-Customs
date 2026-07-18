@@ -11,34 +11,34 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
- * Bibliotheque d'Enchants : liste absolument tous les Custom Enchants
- * disponibles avec nom / description / compatibilite / effet.
+ * Bibliothèque d'Enchants : liste absolument tous les Custom Enchants
+ * disponibles avec nom / description / compatibilité / effet.
  *
- * Disposition fixe et volontairement centree : chaque page peut contenir
- * jusqu'a 14 custom enchants, places exclusivement dans les slots
+ * Disposition fixe et volontairement centrée : chaque page peut contenir
+ * jusqu'à 14 custom enchants, placés exclusivement dans les slots
  * 10,11,12,13,14,15,16,19,20,21,22,23,24,25. Les boutons de navigation
- * (9 = page precedente, 26 = page suivante, en bas a droite) restent en
- * dehors de cette zone d'affichage afin qu'elle ne soit jamais amputee.
+ * (9 = page précédente, 26 = page suivante, en bas à droite) restent en
+ * dehors de cette zone d'affichage afin qu'elle ne soit jamais amputée.
  * Cette disposition
  * est identique sur TOUTES les pages, y compris les futures : ajouter un
  * 15e enchant dans CustomEnchant remplit simplement la page courante puis,
- * une fois pleine, cree automatiquement une page suivante qui reprend
- * exactement le meme gabarit, sans aucun changement de code necessaire ici.
+ * une fois pleine, crée automatiquement une page suivante qui reprend
+ * exactement le même gabarit, sans aucun changement de code nécessaire ici.
  */
 public final class EnchantLibraryGUI {
 
-    public static final String TITLE = ChatColor.DARK_GRAY.toString() + ChatColor.BOLD + "Bibliotheque d'Enchants";
+    public static final String TITLE = ChatColor.DARK_GRAY.toString() + ChatColor.BOLD + "Bibliothèque d'Enchants";
 
     public static final int SLOT_BACK = 4;
     public static final int SLOT_PREV = 9;
     public static final int SLOT_NEXT = 26;
 
     /**
-     * Disposition fixe et definitive des enchants, identique sur toutes les
-     * pages : 14 slots exactement, jamais plus, jamais moins. Decalee d'une
-     * colonne vers la gauche pour laisser la colonne de droite entierement
-     * libre : la fleche "page suivante" (SLOT_NEXT) y est ancree en bas a
-     * droite, symetrique de la fleche "page precedente" en bas a gauche.
+     * Disposition fixe et définitive des enchants, identique sur toutes les
+     * pages : 14 slots exactement, jamais plus, jamais moins. Décalée d'une
+     * colonne vers la gauche pour laisser la colonne de droite entièrement
+     * libre : la flèche "page suivante" (SLOT_NEXT) y est ancrée en bas à
+     * droite, symétrique de la flèche "page précédente" en bas à gauche.
      */
     private static final int[] DISPLAY_SLOTS = new int[]{
             10, 11, 12, 13, 14, 15, 16,
@@ -58,9 +58,9 @@ public final class EnchantLibraryGUI {
         GuiUtil.fillPremiumBackground(inv, new int[]{0, 8, 9, 26});
 
         ItemStack back = GuiUtil.button(Material.ARROW, ChatColor.WHITE, "Retour",
-                GuiUtil.SEPARATOR, ChatColor.GRAY + "Retour a la table.", GuiUtil.SEPARATOR);
-        // La quantite de ce bouton encode discretement la page actuelle (page + 1)
-        // pour permettre au listener de calculer suivant/precedent sans etat externe.
+                GuiUtil.SEPARATOR, ChatColor.GRAY + "Retour à la table.", GuiUtil.SEPARATOR);
+        // La quantité de ce bouton encode discrètement la page actuelle (page + 1)
+        // pour permettre au listener de calculer suivant/précédent sans état externe.
         back.setAmount(page + 1);
         inv.setItem(SLOT_BACK, back);
 
@@ -70,17 +70,17 @@ public final class EnchantLibraryGUI {
             inv.setItem(DISPLAY_SLOTS[i], buildDisplayItem(all[start + i]));
         }
 
-        // Fleche "Page suivante" : toujours presente, meme s'il n'existe
-        // qu'une seule page (systeme pret pour les futurs enchants).
-        // Grisee/inactive tant qu'il n'y a rien apres, verte et
-        // fonctionnelle des qu'une page suivante existe.
+        // Flèche "Page suivante" : toujours présente, même s'il n'existe
+        // qu'une seule page (système prêt pour les futurs enchants).
+        // Grisée/inactive tant qu'il n'y a rien après, verte et
+        // fonctionnelle dès qu'une page suivante existe.
         boolean hasNext = start + pageSize < all.length;
         inv.setItem(SLOT_NEXT, buildNextButton(hasNext));
 
-        // Fleche "Page precedente" : n'apparait que lorsqu'il existe
-        // effectivement une page anterieure.
+        // Flèche "Page précédente" : n'apparaît que lorsqu'il existe
+        // effectivement une page antérieure.
         if (page > 0) {
-            inv.setItem(SLOT_PREV, GuiUtil.button(Material.ARROW, ChatColor.GREEN, "« Page precedente",
+            inv.setItem(SLOT_PREV, GuiUtil.button(Material.ARROW, ChatColor.GREEN, "« Page précédente",
                     GuiUtil.SEPARATOR));
         }
 
