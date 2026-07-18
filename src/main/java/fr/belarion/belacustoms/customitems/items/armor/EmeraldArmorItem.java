@@ -7,6 +7,7 @@ import fr.belarion.belacustoms.api.ItemBuilder;
 import fr.belarion.belacustoms.customitems.config.ItemStatsConfig;
 import fr.belarion.belacustoms.customitems.config.ItemTexture;
 import fr.belarion.belacustoms.customitems.config.ItemTextureRegistry;
+import fr.belarion.belacustoms.utils.ItemTier;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -84,6 +85,7 @@ public class EmeraldArmorItem implements CustomItem, ArmorBonus, ExtraDurability
         if (reinforced) {
             builder.unbreakableTag().unbreakable(true);
         }
+        builder.tier(reinforced ? ItemTier.EMERALD_RENFORCE : ItemTier.EMERALD);
         builder.customId(id);
         return builder.build();
     }
