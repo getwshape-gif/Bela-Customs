@@ -9,8 +9,8 @@ import org.bukkit.ChatColor;
  */
 public enum ItemTier {
 
-    EMERALD("emerald", "Emeraude", ChatColor.GREEN),
-    EMERALD_RENFORCE("emerald_renforce", "Emeraude Renforce", ChatColor.DARK_GREEN);
+    EMERALD("emerald", "Émeraude", ChatColor.GREEN),
+    EMERALD_RENFORCE("emerald_renforce", "Émeraude Renforcé", ChatColor.DARK_GREEN);
 
     private final String id;
     private final String label;
