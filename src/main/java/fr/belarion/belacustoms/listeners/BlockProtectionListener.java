@@ -17,27 +17,27 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Protege les deux blocs premium partages par la Table d'Enchantement
- * Emeraude et l'Enclume Emeraude :
- * - insensibles a TOUTES les explosions (TNT / Creeper / autres) : ce sont
- *   des blocs premium resistants aux explosions, jamais des blocs
+ * Protège les deux blocs premium partagés par la Table d'Enchantement
+ * Émeraude et l'Enclume Émeraude :
+ * - insensibles à TOUTES les explosions (TNT / Creeper / autres) : ce sont
+ *   des blocs premium résistants aux explosions, jamais des blocs
  *   totalement indestructibles.
- * - impossibles a deplacer par un piston.
+ * - impossibles à déplacer par un piston.
  * - cassables normalement par un joueur avec une pioche (comme n'importe
  *   quel bloc solide), en respectant les protections/claims externes
- *   puisque l'evenement n'est jamais annule dans ce cas : le bloc est bien
- *   detruit et recupere par le joueur.
+ *   puisque l'événement n'est jamais annulé dans ce cas : le bloc est bien
+ *   détruit et récupéré par le joueur.
  *
- * L'Enclume Emeraude (Sea Lantern) n'est pas une vraie enclume vanilla —
- * c'est un bloc declencheur qui ouvre un GUI 100% custom avec un cout fixe
- * en niveaux. Il n'existe donc aucun etat "endommagee / tres endommagee /
- * detruite" a gerer : elle reste structurellement toujours "parfaite",
- * sans le moindre code supplementaire necessaire.
+ * L'Enclume Émeraude (Sea Lantern) n'est pas une vraie enclume vanilla —
+ * c'est un bloc déclencheur qui ouvre un GUI 100% custom avec un coût fixe
+ * en niveaux. Il n'existe donc aucun état "endommagée / très endommagée /
+ * détruite" à gérer : elle reste structurellement toujours "parfaite",
+ * sans le moindre code supplémentaire nécessaire.
  *
- * Listener volontairement place au niveau du package `listeners` (et non
- * dans `emeraldanvil` ou `emeraldenchanttable`) car il protege les DEUX
- * blocs a la fois : c'est une regle transverse, pas propre a une seule
- * fonctionnalite.
+ * Listener volontairement placé au niveau du package `listeners` (et non
+ * dans `emeraldanvil` ou `emeraldenchanttable`) car il protège les DEUX
+ * blocs à la fois : c'est une règle transverse, pas propre à une seule
+ * fonctionnalité.
  */
 public class BlockProtectionListener implements Listener {
 
