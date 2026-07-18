@@ -3,9 +3,9 @@ version: 1.0.0
 main: fr.belarion.belacustoms.BelaCustoms
 author: Belarion
 description: >
-  Systeme complet de Custom Items et Custom Enchants tier Emeraude pour serveur
-  PvP Spigot 1.8.x (Table d'Enchantement Emeraude, Enclume Emeraude, outils/armes/
-  armures Emeraude et Emeraude Renforce).
+  Système complet de Custom Items et Custom Enchants tier Émeraude pour serveur
+  PvP Spigot 1.8.x (Table d'Enchantement Émeraude, Enclume Émeraude, outils/armes/
+  armures Émeraude et Émeraude Renforcé).
 softdepend: [WorldGuard, Factions, FactionsUUID, GriefPrevention]
 
 commands:
@@ -14,34 +14,34 @@ commands:
     usage: /belacustoms <reload>
     permission: belacustoms.admin
   enchanttable:
-    description: Donne le bloc de la Table d'Enchantement Emeraude.
+    description: Donne le bloc de la Table d'Enchantement Émeraude.
     usage: /enchanttable
     permission: belacustoms.admin
   enchantanvil:
-    description: Donne le bloc de l'Enclume Emeraude.
+    description: Donne le bloc de l'Enclume Émeraude.
     usage: /enchantanvil
     permission: belacustoms.admin
   enchants:
-    description: Ouvre la Bibliotheque des Custom Enchants.
+    description: Ouvre la Bibliothèque des Custom Enchants.
     usage: /enchants
     permission: belacustoms.enchants
     aliases: [enchant, customenchants, customenchant]
   citem:
-    description: Commande principale du systeme de custom items.
-    usage: /<command> give <joueur> <id> [quantite] | list | id
+    description: Commande principale du système de custom items.
+    usage: /<command> give <joueur> <id> [quantité] | list | id
     permission: belacustoms.items.admin
     permission-message: "&cVous n'avez pas la permission d'utiliser cette commande."
 
 permissions:
   belacustoms.admin:
-    description: Acces aux commandes admin de Bela-Customs (reload, blocs speciaux).
+    description: Accès aux commandes admin de Bela-Customs (reload, blocs spéciaux).
     default: op
   belacustoms.enchants:
-    description: Autorise l'ouverture de la Bibliotheque des Custom Enchants via /enchants.
+    description: Autorise l'ouverture de la Bibliothèque des Custom Enchants via /enchants.
     default: true
   belacustoms.items.admin:
     description: Permet de donner et lister les custom items via /citem.
     default: op
   belacustoms.items.use:
-    description: Permet de beneficier des effets des custom items.
+    description: Permet de bénéficier des effets des custom items.
     default: true

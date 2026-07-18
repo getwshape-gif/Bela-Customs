@@ -2,10 +2,10 @@
 #  Bela-Customs - recipes.yml
 #  Recettes de craft custom.
 #
-#  Aucune recette custom n'est definie pour le moment. Ce fichier et le
-#  package `recipes` (voir RecipeManager) sont prets a accueillir les
-#  futures recettes du serveur sans avoir a reorganiser le plugin :
-#  ajoutez simplement une entree ici puis une methode d'enregistrement
+#  Aucune recette custom n'est définie pour le moment. Ce fichier et le
+#  package `recipes` (voir RecipeManager) sont prêts à accueillir les
+#  futures recettes du serveur sans avoir à réorganiser le plugin :
+#  ajoutez simplement une entrée ici puis une méthode d'enregistrement
 #  correspondante dans RecipeManager#registerAll().
 # =====================================================
 

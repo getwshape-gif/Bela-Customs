@@ -1,8 +1,8 @@
 # =====================================================
 #  Bela-Customs - gui.yml
-#  Reglages d'affichage des interfaces graphiques du plugin.
+#  Réglages d'affichage des interfaces graphiques du plugin.
 # =====================================================
 
 library:
-  # Nombre de custom enchants affiches par page dans la Bibliotheque d'Enchants.
+  # Nombre de custom enchants affichés par page dans la Bibliothèque d'Enchants.
   page-size: 16

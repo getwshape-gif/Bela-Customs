@@ -1,6 +1,6 @@
 # =====================================================
 #  Bela-Customs - custom-items.yml
-#  Statistiques des Custom Items (tier Emeraude / Emeraude Renforce) et
+#  Statistiques des Custom Items (tier Émeraude / Émeraude Renforcé) et
 #  mapping de textures (resource pack 1.8).
 # =====================================================
 
@@ -15,22 +15,22 @@ stats:
     emerald.radius: 0
     reinforced.radius: 1
   axe:
-    # Longueur de la colonne coupee par la Hache Emeraude (bloc vise inclus).
+    # Longueur de la colonne coupée par la Hache Émeraude (bloc visé inclus).
     emerald.length: 3
   sword:
-    # Bonus de degats (points de coeur, 1.0 = un demi coeur) par rapport a une epee diamant.
+    # Bonus de dégâts (points de cœur, 1.0 = un demi cœur) par rapport à une épée diamant.
     emerald.bonus-damage: 3.0
     reinforced.bonus-damage: 5.0
   armor:
-    # Reduction de degats supplementaire (pourcentage, 0.05 = 5%) par piece d'armure equipee.
+    # Réduction de dégâts supplémentaire (pourcentage, 0.05 = 5%) par pièce d'armure équipée.
     emerald.reduction-per-piece: 0.05
     reinforced.reduction-per-piece: 0.08
 
 # ---------------------------------------------------------------------------
-# Association identifiant interne (le meme que le NBT CustomItemId et que
+# Association identifiant interne (le même que le NBT CustomItemId et que
 # /citem give <id>) -> Material vanilla + Damage Value (durability) unique.
-# Technique CustomModelData "pre-1.13" utilisee par les resource packs
-# Minecraft 1.8 pour afficher un modele 3D distinct par item.
+# Technique CustomModelData "pré-1.13" utilisée par les resource packs
+# Minecraft 1.8 pour afficher un modèle 3D distinct par item.
 # ---------------------------------------------------------------------------
 textures:
   EMERALD_HAMMER: {material: DIAMOND_PICKAXE, durability: 1001}
