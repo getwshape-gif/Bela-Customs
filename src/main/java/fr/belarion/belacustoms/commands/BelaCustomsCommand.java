@@ -13,9 +13,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 /**
- * Executeur unique pour les commandes historiquement portees par le plugin
+ * Exécuteur unique pour les commandes historiquement portées par le plugin
  * Belarion-Enchants : /belacustoms (admin, reload), /enchanttable,
- * /enchantanvil et /enchants. Toutes routees ici depuis plugin.yml.
+ * /enchantanvil et /enchants. Toutes routées ici depuis plugin.yml.
  */
 public class BelaCustomsCommand implements CommandExecutor {
 
@@ -36,7 +36,7 @@ public class BelaCustomsCommand implements CommandExecutor {
                 if (sender instanceof Player) {
                     messages.send((Player) sender, "reload");
                 } else {
-                    sender.sendMessage("Configuration de Bela-Customs rechargee.");
+                    sender.sendMessage("Configuration de Bela-Customs rechargée.");
                 }
                 return true;
             }
@@ -55,8 +55,8 @@ public class BelaCustomsCommand implements CommandExecutor {
                 messages.send(player, "no-permission");
                 return true;
             }
-            // Ouvre exactement le meme GUI que le bouton Bibliotheque de la
-            // table d'enchantement : une seule version du GUI a maintenir.
+            // Ouvre exactement le même GUI que le bouton Bibliothèque de la
+            // table d'enchantement : une seule version du GUI à maintenir.
             player.openInventory(EnchantLibraryGUI.build(0));
             return true;
         }
@@ -64,7 +64,7 @@ public class BelaCustomsCommand implements CommandExecutor {
         if (name.equalsIgnoreCase("enchanttable")) {
             ItemStack block = new ItemStack(Material.EMERALD_BLOCK);
             ItemMeta meta = block.getItemMeta();
-            meta.setDisplayName(ChatColor.DARK_GREEN.toString() + ChatColor.BOLD + "Table d'Enchantement Emeraude");
+            meta.setDisplayName(ChatColor.DARK_GREEN.toString() + ChatColor.BOLD + "Table d'Enchantement Émeraude");
             block.setItemMeta(meta);
             player.getInventory().addItem(block);
             messages.send(player, "enchants.table-block-received");
@@ -74,7 +74,7 @@ public class BelaCustomsCommand implements CommandExecutor {
         if (name.equalsIgnoreCase("enchantanvil")) {
             ItemStack block = new ItemStack(Material.SEA_LANTERN);
             ItemMeta meta = block.getItemMeta();
-            meta.setDisplayName(ChatColor.DARK_GREEN.toString() + ChatColor.BOLD + "Enclume Emeraude");
+            meta.setDisplayName(ChatColor.DARK_GREEN.toString() + ChatColor.BOLD + "Enclume Émeraude");
             block.setItemMeta(meta);
             player.getInventory().addItem(block);
             messages.send(player, "enchants.anvil-block-received");

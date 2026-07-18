@@ -16,7 +16,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
- * /citem give <joueur> <id> [quantite]
+ * /citem give <joueur> <id> [quantité]
  * /citem list
  * /citem id            (affiche l'id du custom item tenu en main)
  */
