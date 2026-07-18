@@ -57,6 +57,17 @@ public class ItemBuilder {
         return this;
     }
 
+    /**
+     * NOTE (correction durabilite) : cette valeur n'est PLUS appliquee au tag
+     * "Damage" reel de l'ItemStack (voir build()). Elle etait auparavant
+     * utilisee comme identifiant de texture pour un resource pack, mais
+     * partageait par erreur le meme slot NBT que la durabilite reelle de
+     * l'item, ce qui provoquait des items generes avec une durabilite
+     * negative (ex: -600) des lors que la valeur depassait la durabilite
+     * maximale reelle du Material (particulierement les armures). Conservee
+     * ici uniquement pour compatibilite avec les appels existants
+     * (.durability(tex.getDurability())) ; n'a plus d'effet sur build().
+     */
     public ItemBuilder durability(short durability) {
         this.durability = durability;
         return this;
@@ -155,10 +166,14 @@ public class ItemBuilder {
     }
 
     public ItemStack build() {
+        // CORRECTION DURABILITE : on ne touche plus jamais au tag "Damage"
+        // reel de l'item ici. Bukkit 1.8 ne connait qu'un seul et meme slot
+        // NBT pour a la fois (a) l'identifiant de texture resource pack et
+        // (b) la durabilite reelle consommee par le joueur : les reutiliser
+        // pour la texture provoquait des items obtenus avec une durabilite
+        // deja negative. Tout custom item doit desormais toujours naitre a
+        // Damage=0, c'est-a-dire durabilite maximale/complete.
         ItemStack item = new ItemStack(material, amount);
-        if (durability != 0) {
-            item.setDurability(durability);
-        }
 
         ItemMeta meta = item.getItemMeta();
         if (displayName != null) {
