@@ -16,10 +16,10 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Map;
 
 /**
- * Gere tout le cycle de vie de la Table d'Enchantement Emeraude :
- * ouverture (clic droit sur un Bloc d'Emeraude), clics dans la table et
- * dans la bibliotheque d'enchants (avec pagination), fermeture (rend le
- * livre pose).
+ * Gère tout le cycle de vie de la Table d'Enchantement Émeraude :
+ * ouverture (clic droit sur un Bloc d'Émeraude), clics dans la table et
+ * dans la bibliothèque d'enchants (avec pagination), fermeture (rend le
+ * livre posé).
  */
 public class EnchantTableListener implements Listener {
 
@@ -61,7 +61,7 @@ public class EnchantTableListener implements Listener {
 
         if (raw == EnchantTableGUI.SLOT_BOOK) {
             // Placement direct (sans shift) : n'accepte qu'un livre vierge, ou une
-            // main vide pour reprendre le livre deja pose. Bloque tout le reste.
+            // main vide pour reprendre le livre déjà posé. Bloque tout le reste.
             ItemStack cursor = event.getCursor();
             if (cursor != null && cursor.getType() != Material.AIR && cursor.getType() != Material.BOOK) {
                 event.setCancelled(true);
@@ -83,9 +83,9 @@ public class EnchantTableListener implements Listener {
 
     /**
      * Reproduit le comportement vanilla du Shift + Click depuis l'inventaire
-     * du joueur : un livre vierge shift-clique est envoye automatiquement
-     * dans le slot d'entree de la table, en fusionnant avec la pile deja
-     * presente si possible. Tout autre item reste bloque (placement invalide).
+     * du joueur : un livre vierge shift-cliqué est envoyé automatiquement
+     * dans le slot d'entrée de la table, en fusionnant avec la pile déjà
+     * présente si possible. Tout autre item reste bloqué (placement invalide).
      */
     private void handleShiftClickIntoTable(InventoryClickEvent event, Inventory top) {
         event.setCancelled(true);
@@ -136,7 +136,7 @@ public class EnchantTableListener implements Listener {
         }
     }
 
-    /** La page actuelle est encodee dans la quantite du bouton Retour (page + 1). */
+    /** La page actuelle est encodée dans la quantité du bouton Retour (page + 1). */
     private int getPage(Inventory top) {
         ItemStack back = top.getItem(EnchantLibraryGUI.SLOT_BACK);
         if (back == null) return 0;
