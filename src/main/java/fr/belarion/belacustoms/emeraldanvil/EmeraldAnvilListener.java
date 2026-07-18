@@ -18,9 +18,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -42,24 +40,6 @@ public class EmeraldAnvilListener implements Listener {
 
         event.setCancelled(true);
         event.getPlayer().openInventory(EmeraldAnvilGUI.build());
-    }
-
-    /**
-     * Filet de securite independant du controle par clic (onClick, plus
-     * bas) : quel que soit le moyen par lequel un item Emeraude se
-     * retrouverait dans les deux slots d'entree d'une VRAIE enclume
-     * vanilla, le resultat (reparation, renommage, fusion avec un livre)
-     * n'est jamais calcule. Empeche completement l'enclume vanilla de
-     * reparer, renommer ou enchanter du stuff Emeraude.
-     */
-    @EventHandler
-    public void onPrepareAnvil(PrepareAnvilEvent event) {
-        AnvilInventory anvil = event.getInventory();
-        ItemStack left = anvil.getItem(0);
-        ItemStack right = anvil.getItem(1);
-        if (ItemTierUtil.isEmeraldTier(left) || ItemTierUtil.isEmeraldTier(right)) {
-            event.setResult(null);
-        }
     }
 
     @EventHandler
