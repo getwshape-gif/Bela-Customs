@@ -2,6 +2,7 @@ package fr.belarion.belacustoms;
 
 import fr.belarion.belacustoms.commands.BelaCustomsCommand;
 import fr.belarion.belacustoms.commands.CustomItemCommand;
+import fr.belarion.belacustoms.commands.DebugCommand;
 import fr.belarion.belacustoms.customenchants.AntiDebuffGuardTask;
 import fr.belarion.belacustoms.customenchants.EffectManager;
 import fr.belarion.belacustoms.customenchants.EnchantSettings;
@@ -33,186 +34,192 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Point d'entree unique du plugin Bela-Customs, fusion complete des anciens
- * plugins Belarion-Enchants et CustomItems.
- *
- * Cablage de l'ensemble du systeme au demarrage :
- *   managers (config/messages) -> customenchants/customitems (registries) ->
- *   listeners -> commandes -> taches recurrentes.
- *
- * Pour ajouter un nouveau Custom Enchant : voir customenchants.CustomEnchant.
- * Pour ajouter un nouveau Custom Item : voir registry.CustomItemRegistry.
- * Pour ajouter une nouvelle recette : voir recipes.RecipeManager.
- */
+* Point d'entree unique du plugin Bela-Customs, fusion complete des anciens
+* plugins Belarion-Enchants et CustomItems.
+*
+* Cablage de l'ensemble du systeme au demarrage :
+* managers (config/messages) -> customenchants/customitems (registries) ->
+* listeners -> commandes -> taches recurrentes.
+*
+* Pour ajouter un nouveau Custom Enchant : voir customenchants.CustomEnchant.
+* Pour ajouter un nouveau Custom Item : voir registry.CustomItemRegistry.
+* Pour ajouter une nouvelle recette : voir recipes.RecipeManager.
+*/
 public class BelaCustoms extends JavaPlugin {
 
-    private static BelaCustoms instance;
+private static BelaCustoms instance;
 
-    private ConfigManager configManager;
-    private MessagesManager messagesManager;
-    private EnchantSettings enchantSettings;
-    private GuiSettings guiSettings;
+private ConfigManager configManager;
+private MessagesManager messagesManager;
+private EnchantSettings enchantSettings;
+private GuiSettings guiSettings;
 
-    private ItemStatsConfig itemStatsConfig;
-    private ItemTextureRegistry itemTextureRegistry;
-    private CustomItemRegistry customItemRegistry;
-    private CustomItemManager customItemManager;
+private ItemStatsConfig itemStatsConfig;
+private ItemTextureRegistry itemTextureRegistry;
+private CustomItemRegistry customItemRegistry;
+private CustomItemManager customItemManager;
 
-    private RecipeManager recipeManager;
+private RecipeManager recipeManager;
 
-    private EffectManager effectManager;
-    private AntiDebuffGuardTask antiDebuffGuardTask;
+private EffectManager effectManager;
+private AntiDebuffGuardTask antiDebuffGuardTask;
 
-    private EmeraldChestManager emeraldChestManager;
+private EmeraldChestManager emeraldChestManager;
 
-    public static BelaCustoms get() {
-        return instance;
-    }
+public static BelaCustoms get() {
+return instance;
+}
 
-    @Override
-    public void onEnable() {
-        instance = this;
+@Override
+public void onEnable() {
+instance = this;
 
-        loadConfigs();
+loadConfigs();
 
-        if (!NBTEditor.isAvailable()) {
-            getLogger().warning("NBTEditor indisponible sur cette version de serveur : "
-                    + "les fonctionnalites Unbreakable/identification NBT des custom items seront degradees.");
-        }
+if (!NBTEditor.isAvailable()) {
+getLogger().warning("NBTEditor indisponible sur cette version de serveur : "
++ "les fonctionnalites Unbreakable/identification NBT des custom items seront degradees.");
+}
 
-        customItemRegistry = new CustomItemRegistry(itemStatsConfig, itemTextureRegistry);
-        customItemManager = new CustomItemManager(customItemRegistry);
+customItemRegistry = new CustomItemRegistry(itemStatsConfig, itemTextureRegistry);
+customItemManager = new CustomItemManager(customItemRegistry);
 
-        emeraldChestManager = new EmeraldChestManager(this);
-        emeraldChestManager.load();
+emeraldChestManager = new EmeraldChestManager(this);
+emeraldChestManager.load();
 
-        recipeManager = new RecipeManager(this);
-        recipeManager.registerAll();
+recipeManager = new RecipeManager(this);
+recipeManager.registerAll();
 
-        registerListeners();
-        registerCommands();
-        startRecurringTasks();
+registerListeners();
+registerCommands();
+startRecurringTasks();
 
-        getLogger().info("Bela-Customs v1.0.0 (Spigot 1.8.8) actif : "
-                + fr.belarion.belacustoms.customenchants.CustomEnchant.values().length + " custom enchants, "
-                + customItemRegistry.getIds().size() + " custom items charges.");
-    }
+getLogger().info("Bela-Customs v1.0.0 (Spigot 1.8.8) actif : "
++ fr.belarion.belacustoms.customenchants.CustomEnchant.values().length + " custom enchants, "
++ customItemRegistry.getIds().size() + " custom items charges.");
+}
 
-    @Override
-    public void onDisable() {
-        if (effectManager != null) {
-            effectManager.cancel();
-        }
-        if (antiDebuffGuardTask != null) {
-            antiDebuffGuardTask.cancel();
-        }
-        if (emeraldChestManager != null) {
-            emeraldChestManager.save();
-        }
-        getLogger().info("Bela-Customs desactive.");
-    }
+@Override
+public void onDisable() {
+if (effectManager != null) {
+effectManager.cancel();
+}
+if (antiDebuffGuardTask != null) {
+antiDebuffGuardTask.cancel();
+}
+if (emeraldChestManager != null) {
+emeraldChestManager.save();
+}
+getLogger().info("Bela-Customs desactive.");
+}
 
-    private void loadConfigs() {
-        configManager = new ConfigManager(this);
-        configManager.load();
+private void loadConfigs() {
+configManager = new ConfigManager(this);
+configManager.load();
 
-        messagesManager = new MessagesManager(this);
-        messagesManager.load();
+messagesManager = new MessagesManager(this);
+messagesManager.load();
 
-        enchantSettings = new EnchantSettings(this);
-        enchantSettings.load();
+enchantSettings = new EnchantSettings(this);
+enchantSettings.load();
 
-        guiSettings = new GuiSettings(this);
-        guiSettings.load();
+guiSettings = new GuiSettings(this);
+guiSettings.load();
 
-        itemStatsConfig = new ItemStatsConfig(this);
-        itemStatsConfig.load();
+itemStatsConfig = new ItemStatsConfig(this);
+itemStatsConfig.load();
 
-        itemTextureRegistry = new ItemTextureRegistry(this);
-        itemTextureRegistry.load();
-    }
+itemTextureRegistry = new ItemTextureRegistry(this);
+itemTextureRegistry.load();
+}
 
-    private void registerListeners() {
-        // Table d'Enchantement Émeraude / Enclume Émeraude
-        getServer().getPluginManager().registerEvents(new EnchantTableListener(), this);
-        getServer().getPluginManager().registerEvents(new EmeraldAnvilListener(), this);
+private void registerListeners() {
+// Table d'Enchantement Émeraude / Enclume Émeraude
+getServer().getPluginManager().registerEvents(new EnchantTableListener(), this);
+getServer().getPluginManager().registerEvents(new EmeraldAnvilListener(), this);
 
-        // Protection des blocs custom (partagee table + enclume)
-        getServer().getPluginManager().registerEvents(new BlockProtectionListener(), this);
+// Protection des blocs custom (partagee table + enclume)
+getServer().getPluginManager().registerEvents(new BlockProtectionListener(), this);
 
-        // Coffre en Émeraude (inventaire virtuel 54 slots + resistance a 5 explosions)
-        getServer().getPluginManager().registerEvents(new EmeraldChestListener(emeraldChestManager), this);
+// Coffre en Émeraude (inventaire virtuel 54 slots + resistance a 5 explosions)
+getServer().getPluginManager().registerEvents(new EmeraldChestListener(emeraldChestManager), this);
 
-        // Mecaniques de Custom Enchants a evenement specifique
-        getServer().getPluginManager().registerEvents(new EnchantMiningListener(), this);
-        getServer().getPluginManager().registerEvents(new EnchantCombatListener(), this);
-        getServer().getPluginManager().registerEvents(new EnchantFishingListener(), this);
-        getServer().getPluginManager().registerEvents(new EnchantFallDamageListener(), this);
-        getServer().getPluginManager().registerEvents(new EnchantPotionProtectionListener(), this);
+// Mecaniques de Custom Enchants a evenement specifique
+getServer().getPluginManager().registerEvents(new EnchantMiningListener(), this);
+getServer().getPluginManager().registerEvents(new EnchantCombatListener(), this);
+getServer().getPluginManager().registerEvents(new EnchantFishingListener(), this);
+getServer().getPluginManager().registerEvents(new EnchantFallDamageListener(), this);
+getServer().getPluginManager().registerEvents(new EnchantPotionProtectionListener(), this);
 
-        // Mecaniques de Custom Items
-        getServer().getPluginManager().registerEvents(new ItemMiningListener(customItemManager), this);
-        getServer().getPluginManager().registerEvents(new ItemFarmingListener(customItemManager), this);
-        getServer().getPluginManager().registerEvents(new ItemCombatListener(customItemManager), this);
-        getServer().getPluginManager().registerEvents(new ItemDurabilityListener(customItemManager), this);
-        getServer().getPluginManager().registerEvents(new ItemCraftProtectionListener(customItemManager), this);
-    }
+// Mecaniques de Custom Items
+getServer().getPluginManager().registerEvents(new ItemMiningListener(customItemManager), this);
+getServer().getPluginManager().registerEvents(new ItemFarmingListener(customItemManager), this);
+getServer().getPluginManager().registerEvents(new ItemCombatListener(customItemManager), this);
+getServer().getPluginManager().registerEvents(new ItemDurabilityListener(customItemManager), this);
+getServer().getPluginManager().registerEvents(new ItemCraftProtectionListener(customItemManager), this);
+}
 
-    private void registerCommands() {
-        BelaCustomsCommand belaCustomsCommand = new BelaCustomsCommand(this);
-        setExecutor("belacustoms", belaCustomsCommand);
-        setExecutor("enchanttable", belaCustomsCommand);
-        setExecutor("enchantanvil", belaCustomsCommand);
-        setExecutor("enchants", belaCustomsCommand);
+private void registerCommands() {
+BelaCustomsCommand belaCustomsCommand = new BelaCustomsCommand(this);
+setExecutor("belacustoms", belaCustomsCommand);
+setExecutor("enchanttable", belaCustomsCommand);
+setExecutor("enchantanvil", belaCustomsCommand);
+setExecutor("enchants", belaCustomsCommand);
 
-        CustomItemCommand customItemCommand = new CustomItemCommand(this, customItemManager);
-        PluginCommand citem = getCommand("citem");
-        if (citem != null) {
-            citem.setExecutor(customItemCommand);
-            citem.setTabCompleter(customItemCommand);
-        }
-    }
+CustomItemCommand customItemCommand = new CustomItemCommand(this, customItemManager);
+PluginCommand citem = getCommand("citem");
+if (citem != null) {
+citem.setExecutor(customItemCommand);
+citem.setTabCompleter(customItemCommand);
+}
 
-    private void setExecutor(String name, BelaCustomsCommand executor) {
-        PluginCommand command = getCommand(name);
-        if (command != null) {
-            command.setExecutor(executor);
-        }
-    }
+// Commande de debug temporaire (lecture seule) : voir commands.DebugCommand.
+PluginCommand beladebug = getCommand("beladebug");
+if (beladebug != null) {
+beladebug.setExecutor(new DebugCommand());
+}
+}
 
-    private void startRecurringTasks() {
-        // Effets passifs permanents (Speed, Strength, Fire Resistance, Haste) : 1 fois/seconde
-        effectManager = new EffectManager();
-        effectManager.runTaskTimer(this, 20L, 20L);
+private void setExecutor(String name, BelaCustomsCommand executor) {
+PluginCommand command = getCommand(name);
+if (command != null) {
+command.setExecutor(executor);
+}
+}
 
-        // Garde Anti Debuff : tres haute frequence (0.1s) pour une reactivite quasi instantanee
-        antiDebuffGuardTask = new AntiDebuffGuardTask();
-        antiDebuffGuardTask.runTaskTimer(this, 1L, 2L);
-    }
+private void startRecurringTasks() {
+// Effets passifs permanents (Speed, Strength, Fire Resistance, Haste) : 1 fois/seconde
+effectManager = new EffectManager();
+effectManager.runTaskTimer(this, 20L, 20L);
 
-    /**
-     * Recharge la configuration a chaud (/belacustoms reload) : reglages
-     * generaux, Custom Enchants et GUI. Les statistiques de Custom Items
-     * (custom-items.yml) et le registre d'items necessitent un redemarrage
-     * du serveur pour etre repris en compte, comme c'etait deja le cas
-     * avant la fusion (le plugin CustomItems ne proposait aucune commande
-     * de reload).
-     */
-    public void reloadAll() {
-        configManager.load();
-        messagesManager.load();
-        enchantSettings.load();
-        guiSettings.load();
-    }
+// Garde Anti Debuff : tres haute frequence (0.1s) pour une reactivite quasi instantanee
+antiDebuffGuardTask = new AntiDebuffGuardTask();
+antiDebuffGuardTask.runTaskTimer(this, 1L, 2L);
+}
 
-    public ConfigManager getConfigManager() { return configManager; }
-    public MessagesManager getMessagesManager() { return messagesManager; }
-    public EnchantSettings getEnchantSettings() { return enchantSettings; }
-    public GuiSettings getGuiSettings() { return guiSettings; }
-    public ItemStatsConfig getItemStatsConfig() { return itemStatsConfig; }
-    public ItemTextureRegistry getItemTextureRegistry() { return itemTextureRegistry; }
-    public CustomItemRegistry getCustomItemRegistry() { return customItemRegistry; }
-    public CustomItemManager getCustomItemManager() { return customItemManager; }
-    public RecipeManager getRecipeManager() { return recipeManager; }
-    public EmeraldChestManager getEmeraldChestManager() { return emeraldChestManager; }
+/**
+* Recharge la configuration a chaud (/belacustoms reload) : reglages
+* generaux, Custom Enchants et GUI. Les statistiques de Custom Items
+* (custom-items.yml) et le registre d'items necessitent un redemarrage
+* du serveur pour etre repris en compte, comme c'etait deja le cas
+* avant la fusion (le plugin CustomItems ne proposait aucune commande
+* de reload).
+*/
+public void reloadAll() {
+configManager.load();
+messagesManager.load();
+enchantSettings.load();
+guiSettings.load();
+}
+
+public ConfigManager getConfigManager() { return configManager; }
+public MessagesManager getMessagesManager() { return messagesManager; }
+public EnchantSettings getEnchantSettings() { return enchantSettings; }
+public GuiSettings getGuiSettings() { return guiSettings; }
+public ItemStatsConfig getItemStatsConfig() { return itemStatsConfig; }
+public ItemTextureRegistry getItemTextureRegistry() { return itemTextureRegistry; }
+public CustomItemRegistry getCustomItemRegistry() { return customItemRegistry; }
+public CustomItemManager getCustomItemManager() { return customItemManager; }
+public RecipeManager getRecipeManager() { return recipeManager; }
+public EmeraldChestManager getEmeraldChestManager() { return emeraldChestManager; }
 }
