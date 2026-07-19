@@ -21,7 +21,27 @@ import java.lang.reflect.Method;
 */
 public final class NBTEditor {
 
-/** Cle NBT utilisee pour stocker l'identifiant interne du custom item. */
+/**
+* Cle NBT utilisee pour stocker l'identifiant interne du custom item.
+*
+* IMPORTANT (compatibilite resource pack OptiFine CIT 1.8) : cette cle est
+* ecrite directement a la racine du compound NBT "tag" de l'item (voir
+* setCustomId() / getOrCreateTag() ci-dessous : setString ne cree jamais
+* de sous-compound supplementaire). Pour qu'une regle OptiFine CIT
+* (fichier .properties sous assets/minecraft/optifine/cit/... ou
+* assets/minecraft/mcpatcher/cit/..., les deux dossiers sont supportes)
+* detecte cette cle, la syntaxe correcte est :
+*
+*     nbt.CustomItemId=EMERALD_HAMMER
+*
+* et NON "nbt.tag.CustomItemId=...". Le prefixe "nbt." d'OptiFine pointe
+* deja a l'interieur du compound "tag" de l'item : un segment ".tag."
+* supplementaire cible un chemin inexistant (tag.tag.CustomItemId), la
+* regle ne matche donc jamais et OptiFine se rabat silencieusement sur le
+* rendu vanilla du Material de base (aucune erreur visible, aucun log :
+* c'est exactement le symptome "item custom affiche comme un item
+* vanilla classique").
+*/
 public static final String CUSTOM_ID_KEY = "CustomItemId";
 
 private static final String VERSION;
