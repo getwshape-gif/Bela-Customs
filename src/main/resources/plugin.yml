@@ -31,6 +31,11 @@ commands:
     usage: /<command> give <joueur> <id> [quantité] | list | id
     permission: belacustoms.items.admin
     permission-message: "&cVous n'avez pas la permission d'utiliser cette commande."
+  beladebug:
+    description: "Debug temporaire en lecture seule : affiche Material, NBT, lore et enchantements de l'item tenu en main."
+    usage: /beladebug
+    permission: belacustoms.debug
+    aliases: [customdebug]
 
 permissions:
   belacustoms.admin:
@@ -45,3 +50,6 @@ permissions:
   belacustoms.items.use:
     description: Permet de bénéficier des effets des custom items.
     default: true
+  belacustoms.debug:
+    description: Autorise l'utilisation de /beladebug (debug NBT temporaire, lecture seule).
+    default: op
