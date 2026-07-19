@@ -28,9 +28,30 @@ stats:
 
 # ---------------------------------------------------------------------------
 # Association identifiant interne (le même que le NBT CustomItemId et que
-# /citem give <id>) -> Material vanilla + Damage Value (durability) unique.
-# Technique CustomModelData "pré-1.13" utilisée par les resource packs
-# Minecraft 1.8 pour afficher un modèle 3D distinct par item.
+# /citem give <id>) -> Material vanilla de base.
+#
+# ATTENTION (depuis la correction de durabilité) : le champ "durability"
+# ci-dessous n'est PLUS utilisé pour l'affichage du resource pack. Il
+# servait à l'ancienne technique "CustomModelData pré-1.13" (Damage Value
+# = identifiant de texture), abandonnée car elle partageait le même slot
+# NBT que la durabilité réelle de l'item et provoquait des items générés
+# avec une durabilité négative (voir ItemBuilder.durability()). Le champ
+# est conservé ici uniquement pour compatibilité de format, il est ignoré
+# côté rendu.
+#
+# Le champ "material" reste utilisé (Material vanilla de base de l'item).
+# La texture doit désormais être sélectionnée côté resource pack par une
+# règle OptiFine CIT qui matche sur le NBT CustomItemId, PAS sur le
+# Damage Value. Exemple pour EMERALD_HAMMER (assets/minecraft/optifine/cit/
+# emerald_hammer.properties) :
+#
+#   type=item
+#   items=diamond_pickaxe
+#   nbt.CustomItemId=EMERALD_HAMMER
+#   texture=emerald_hammer
+#
+# Attention à ne PAS écrire "nbt.tag.CustomItemId=..." (segment ".tag."
+# en trop, la règle CIT ne matcherait jamais) : voir NBTEditor.CUSTOM_ID_KEY.
 # ---------------------------------------------------------------------------
 textures:
   EMERALD_HAMMER: {material: DIAMOND_PICKAXE, durability: 1001}
