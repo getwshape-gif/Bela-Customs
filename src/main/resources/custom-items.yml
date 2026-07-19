@@ -74,3 +74,6 @@ textures:
   REINFORCED_EMERALD_LEGGINGS: {material: DIAMOND_LEGGINGS, durability: 1018}
   EMERALD_BOOTS: {material: DIAMOND_BOOTS, durability: 1019}
   REINFORCED_EMERALD_BOOTS: {material: DIAMOND_BOOTS, durability: 1020}
+
+EMERALD_ENCHANT_TABLE: {material: EMERALD_BLOCK, durability: 1021}
+EMERALD_ANVIL: {material: SEA_LANTERN, durability: 1022}
