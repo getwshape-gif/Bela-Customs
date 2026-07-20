@@ -50,6 +50,7 @@ public class EmeraldEnchantTableItem implements CustomItem {
         ItemTexture tex = textures.get(ID).orElse(new ItemTexture(Material.PRISMARINE, (short) 2));
         ItemStack item = new ItemBuilder(tex.getMaterial())
                 .rawName("&2&lTable d'Enchantement Émeraude")
+                .loreLine("&a✔ Obtenir des enchants customs")
                 .customId(ID)
                 .noCustomEnchantsTag()
                 .build();
