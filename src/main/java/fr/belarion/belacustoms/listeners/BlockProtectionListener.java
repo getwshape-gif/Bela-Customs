@@ -1,6 +1,9 @@
 package fr.belarion.belacustoms.listeners;
 
 import fr.belarion.belacustoms.BelaCustoms;
+import fr.belarion.belacustoms.api.CustomItem;
+import fr.belarion.belacustoms.customitems.items.misc.EmeraldAnvilItem;
+import fr.belarion.belacustoms.customitems.items.misc.EmeraldEnchantTableItem;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -20,31 +23,31 @@ import java.util.List;
  * Protège les deux blocs premium partagés par la Table d'Enchantement
  * Émeraude et l'Enclume Émeraude :
  * - insensibles à TOUTES les explosions (TNT / Creeper / autres) : ce sont
- * des blocs premium résistants aux explosions, jamais des blocs
- * totalement indestructibles.
+ *   des blocs premium résistants aux explosions, jamais des blocs
+ *   totalement indestructibles.
  * - impossibles à déplacer par un piston.
  * - cassables normalement par un joueur avec une pioche (comme n'importe
- * quel bloc solide), en respectant les protections/claims externes
- * puisque l'événement n'est jamais annulé dans ce cas : le bloc est bien
- * détruit et récupéré par le joueur.
+ *   quel bloc solide).
  *
  * Bloc de la Table d'Enchantement Émeraude : Material.PRISMARINE avec
  * data 2 (Dark Prismarine) — remplace l'ancien Material.EMERALD_BLOCK.
  * Seule cette variante précise (data 2) est protégée : un Prismarine ou
  * Prismarine Bricks (data 0/1) classique reste un bloc vanilla normal.
- * Le Prismarine se drop deja lui-meme normalement sous pioche en vanilla
- * (aucune intervention necessaire ici).
  *
  * Bloc de l'Enclume Émeraude : Material.SEA_LANTERN. Ce n'est pas une
  * vraie enclume vanilla — c'est un bloc déclencheur qui ouvre un GUI 100%
- * custom avec un coût fixe en niveaux. Il n'existe donc aucun état
- * "endommagée / très endommagée / détruite" à gérer : elle reste
- * structurellement toujours "parfaite", sans le moindre code
- * supplémentaire nécessaire. Contrairement au Prismarine, Sea Lantern ne
- * se drop JAMAIS lui-meme sous pioche vanilla sans Silk Touch (il donne
- * des Prismarine Crystals) : onBreak() reproduit donc manuellement un
- * cassage "normal" pour ce bloc precis, afin qu'il redonne bien un Sea
- * Lantern (voir plus bas).
+ * custom avec un coût fixe en niveaux.
+ *
+ * IMPORTANT (drop au cassage) : Bukkit 1.8 ne conserve aucun NBT sur un
+ * bloc plein une fois posé (pas de tile entity pour ces blocs), donc un
+ * cassage vanilla "laissé suivre son cours" redonnerait un bloc vanilla
+ * brut (Prismarine / Sea Lantern) SANS nom, lore, NBT CustomItemId ni
+ * texture custom — pas le vrai objet que le joueur a posé. onBreak()
+ * annule donc systématiquement le cassage vanilla pour ces deux blocs et
+ * reconstruit lui-même l'ItemStack CustomItem correspondant via
+ * CustomItemRegistry (EMERALD_ENCHANT_TABLE / EMERALD_ANVIL), afin que le
+ * joueur récupère bien l'objet custom complet (nom, lore, NBT, texture),
+ * identique à celui obtenu via /citem.
  *
  * Listener volontairement placé au niveau du package `listeners` (et non
  * dans `emeraldanvil` ou `emeraldenchanttable`) car il protège les DEUX
@@ -107,12 +110,11 @@ public class BlockProtectionListener implements Listener {
     }
 
     /**
-     * Cassage manuel autorise pour les deux blocs premium, uniquement a la
-     * pioche (comme un bloc mineral classique). Aucune annulation en dehors
-     * de ce controle d'outil pour le Prismarine (le joueur casse normalement
-     * le bloc, qui est detruit et recupere, en respectant les eventuelles
-     * protections/claims d'autres plugins). Le Sea Lantern (Enclume
-     * Émeraude) est un cas particulier : voir plus bas.
+     * Cassage manuel autorisé pour les deux blocs premium, uniquement à la
+     * pioche (comme un bloc minéral classique). Dans les deux cas, le
+     * cassage vanilla est annulé et remplacé par un drop de l'ItemStack
+     * CustomItem réel (nom, lore, NBT CustomItemId, texture), reconstruit
+     * via CustomItemRegistry — voir le commentaire de classe ci-dessus.
      */
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
@@ -127,17 +129,16 @@ public class BlockProtectionListener implements Listener {
             return;
         }
 
-        // Material.SEA_LANTERN ne se drop JAMAIS lui-meme sous pioche sans
-        // Silk Touch en vanilla (il donne des Prismarine Crystals) : on
-        // reproduit donc manuellement un cassage "normal" qui redonne bien
-        // un Sea Lantern, exactement comme n'importe quel autre bloc mine a
-        // la pioche. Le Prismarine (Table d'Enchantement) se drop deja
-        // correctement lui-meme en vanilla : aucune intervention necessaire,
-        // on laisse l'evenement suivre son cours normal dans ce cas.
-        if (block.getType() == Material.SEA_LANTERN) {
-            event.setCancelled(true);
-            block.setType(Material.AIR);
-            block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.SEA_LANTERN));
-        }
+        boolean isAnvil = block.getType() == Material.SEA_LANTERN;
+        String id = isAnvil ? EmeraldAnvilItem.ID : EmeraldEnchantTableItem.ID;
+        Material fallback = isAnvil ? Material.SEA_LANTERN : Material.PRISMARINE;
+
+        event.setCancelled(true);
+        block.setType(Material.AIR);
+
+        ItemStack drop = BelaCustoms.get().getCustomItemRegistry().get(id)
+                .map(CustomItem::build)
+                .orElseGet(() -> new ItemStack(fallback));
+        block.getWorld().dropItemNaturally(block.getLocation(), drop);
     }
 }
