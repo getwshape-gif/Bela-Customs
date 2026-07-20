@@ -7,13 +7,16 @@ import fr.belarion.belacustoms.customitems.config.ItemTexture;
 import fr.belarion.belacustoms.customitems.config.ItemTextureRegistry;
 import fr.belarion.belacustoms.utils.ItemTier;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Pioche emeraude : plus rapide qu'une pioche diamant (Efficacite I offerte
- * de base, cumulable ensuite normalement via table d'enchantement/enclume
- * jusqu'au niveau V vanilla) et plus grande duree de vie effective.
+ * Pioche emeraude : plus rapide qu'une pioche diamant et plus grande duree
+ * de vie effective.
+ *
+ * Donnee sans aucun enchantement de base (voir demande du 20/07/2026) :
+ * l'item reste normalement enchantable ensuite via table d'enchantement,
+ * enclume ou livres, jusqu'au niveau V vanilla comme n'importe quel autre
+ * outil.
  */
 public class EmeraldPickaxe implements CustomItem, ExtraDurability {
 
@@ -47,7 +50,6 @@ public class EmeraldPickaxe implements CustomItem, ExtraDurability {
                 .emeraldName("Pioche", false)
                 .progression(false)
                 .loreLine("&7Minage amélioré.")
-                .enchant(Enchantment.DIG_SPEED, 1)
                 .tier(ItemTier.EMERALD)
                 .customId(ID)
                 .build();
