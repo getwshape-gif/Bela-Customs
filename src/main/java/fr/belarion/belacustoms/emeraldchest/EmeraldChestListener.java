@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,6 +19,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -26,24 +28,40 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Gère le cycle de vie complet du Coffre en Émeraude posé dans le monde :
- * - Pose : enregistre sa position dans EmeraldChestManager.
- * - Ouverture : intercepte TOUJOURS le clic droit vanilla et ouvre à la
- *   place un inventaire virtuel de 54 slots — c'est ce qui garantit à la
- *   fois l'apparence "coffre simple" et la capacité "double coffre", et qui
- *   empêche toute fusion avec un coffre voisin puisque le vrai tile entity
- *   du bloc n'est jamais utilisé.
- * - Fermeture : sauvegarde le contenu de l'inventaire virtuel.
- * - Explosion : résiste à EmeraldChestManager.MAX_EXPLOSIONS (5) explosions
- *   de n'importe quelle source (TNT, Creeper, ou toute autre source côté
- *   serveur), puis est détruit normalement (comme n'importe quel bloc,
- *   contenu déversé au sol comme un vrai coffre vanilla détruit par une
- *   explosion).
- * - Cassage : nécessite une pioche (comme les autres blocs premium du
- *   plugin, voir BlockProtectionListener), déverse le contenu au sol et
- *   redonne l'item Coffre en Émeraude au joueur.
- */
+* Gère le cycle de vie complet du Coffre en Émeraude posé dans le monde :
+* - Pose : enregistre sa position dans EmeraldChestManager, puis applique
+* ChestMergeGuard (voir plus bas) pour empêcher toute fusion visuelle
+* vanilla avec un coffre adjacent.
+* - Ouverture : intercepte TOUJOURS le clic droit vanilla et ouvre à la
+* place un inventaire virtuel de 54 slots — c'est ce qui garantit à la
+* fois l'apparence "coffre simple" et la capacité "double coffre", et qui
+* empêche toute fusion FONCTIONNELLE avec un coffre voisin puisque le
+* vrai tile entity du bloc n'est jamais utilisé.
+* - Fermeture : sauvegarde le contenu de l'inventaire virtuel.
+* - Explosion : résiste à EmeraldChestManager.MAX_EXPLOSIONS (5) explosions
+* de n'importe quelle source (TNT, Creeper, ou toute autre source côté
+* serveur), puis est détruit normalement (comme n'importe quel bloc,
+* contenu déversé au sol comme un vrai coffre vanilla détruit par une
+* explosion).
+* - Cassage : nécessite une pioche (comme les autres blocs premium du
+* plugin, voir BlockProtectionListener), déverse le contenu au sol et
+* redonne l'item Coffre en Émeraude au joueur.
+*
+* Fusion VISUELLE vanilla (double coffre) : contrairement à la fusion
+* fonctionnelle ci-dessus (déjà gérée), Minecraft 1.8 fusionne aussi
+* visuellement deux TRAPPED_CHEST adjacents en un seul modèle "double
+* coffre", indépendamment de toute logique du plugin — c'est un
+* comportement du moteur de rendu vanilla. onPlace() et onChunkLoad()
+* appliquent donc ChestMergeGuard sur chaque Coffre en Émeraude concerné
+* (lui-même et ses voisins immédiats) pour empêcher définitivement ce
+* rendu fusionné : chaque coffre reste visuellement indépendant, quel que
+* soit le nombre posé côte à côte.
+*/
 public class EmeraldChestListener implements Listener {
+
+    private static final BlockFace[] ADJACENT_FACES = {
+            BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST
+    };
 
     private final EmeraldChestManager manager;
 
@@ -61,9 +79,61 @@ public class EmeraldChestListener implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
+        Block block = event.getBlock();
+        Material type = block.getType();
+        boolean isChestLike = type == Material.TRAPPED_CHEST || type == Material.CHEST;
+
         ItemStack item = event.getItemInHand();
-        if (item == null || !EmeraldChest.ID.equals(NBTEditor.getCustomId(item))) return;
-        manager.track(event.getBlock().getLocation());
+        boolean isEmeraldChest = item != null && EmeraldChest.ID.equals(NBTEditor.getCustomId(item));
+        if (isEmeraldChest) {
+            manager.track(block.getLocation());
+        }
+
+        if (!isChestLike) return;
+
+        // N'intervient JAMAIS sur des coffres vanilla classiques sans lien
+        // avec un Coffre en Émeraude : seul un Coffre en Émeraude, posé ici
+        // ou déjà présent en voisin, déclenche la protection anti-fusion.
+        boolean touchesEmeraldChest = isEmeraldChest;
+        for (BlockFace face : ADJACENT_FACES) {
+            Block neighbor = block.getRelative(face);
+            Material neighborType = neighbor.getType();
+            if (neighborType != Material.TRAPPED_CHEST && neighborType != Material.CHEST) continue;
+            if (!manager.isTracked(neighbor.getLocation())) continue;
+
+            touchesEmeraldChest = true;
+            ChestMergeGuard.preventMerge(neighbor);
+        }
+
+        if (!touchesEmeraldChest) return;
+
+        ChestMergeGuard.preventMerge(block);
+        // Second passage différé : certains chemins vanilla ré-exécutent la
+        // vérification d'adjacence juste après cet événement (première
+        // interaction, mise à jour de bloc suivante) ; on s'assure donc que
+        // l'état "aucun voisin" reste bien celui lu en dernier.
+        Bukkit.getScheduler().runTask(BelaCustoms.get(), () -> {
+            Material current = block.getType();
+            if (current == Material.TRAPPED_CHEST || current == Material.CHEST) {
+                ChestMergeGuard.preventMerge(block);
+            }
+        });
+    }
+
+    /**
+     * Ré-applique ChestMergeGuard à chaque Coffre en Émeraude tracé situé
+     * dans un chunk qui vient d'être chargé : une TileEntityChest est
+     * recréée à chaque chargement de chunk, ce qui réinitialise son état
+     * "vérifié" et exposerait de nouveau le coffre à une fusion visuelle
+     * sans cette ré-application.
+     */
+    @EventHandler
+    public void onChunkLoad(ChunkLoadEvent event) {
+        List<Location> tracked = manager.getTrackedLocationsInChunk(
+                event.getWorld().getName(), event.getChunk().getX(), event.getChunk().getZ());
+        for (Location loc : tracked) {
+            ChestMergeGuard.preventMerge(loc.getBlock());
+        }
     }
 
     @EventHandler
