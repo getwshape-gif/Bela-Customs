@@ -32,13 +32,19 @@ import java.util.List;
  * data 2 (Dark Prismarine) — remplace l'ancien Material.EMERALD_BLOCK.
  * Seule cette variante précise (data 2) est protégée : un Prismarine ou
  * Prismarine Bricks (data 0/1) classique reste un bloc vanilla normal.
+ * Le Prismarine se drop deja lui-meme normalement sous pioche en vanilla
+ * (aucune intervention necessaire ici).
  *
  * Bloc de l'Enclume Émeraude : Material.SEA_LANTERN. Ce n'est pas une
  * vraie enclume vanilla — c'est un bloc déclencheur qui ouvre un GUI 100%
  * custom avec un coût fixe en niveaux. Il n'existe donc aucun état
  * "endommagée / très endommagée / détruite" à gérer : elle reste
  * structurellement toujours "parfaite", sans le moindre code
- * supplémentaire nécessaire.
+ * supplémentaire nécessaire. Contrairement au Prismarine, Sea Lantern ne
+ * se drop JAMAIS lui-meme sous pioche vanilla sans Silk Touch (il donne
+ * des Prismarine Crystals) : onBreak() reproduit donc manuellement un
+ * cassage "normal" pour ce bloc precis, afin qu'il redonne bien un Sea
+ * Lantern (voir plus bas).
  *
  * Listener volontairement placé au niveau du package `listeners` (et non
  * dans `emeraldanvil` ou `emeraldenchanttable`) car il protège les DEUX
@@ -103,9 +109,10 @@ public class BlockProtectionListener implements Listener {
     /**
      * Cassage manuel autorise pour les deux blocs premium, uniquement a la
      * pioche (comme un bloc mineral classique). Aucune annulation en dehors
-     * de ce controle d'outil : le joueur casse normalement le bloc, qui est
-     * detruit et recupere, en respectant les eventuelles protections/claims
-     * d'autres plugins (l'evenement n'est pas touche dans ce cas).
+     * de ce controle d'outil pour le Prismarine (le joueur casse normalement
+     * le bloc, qui est detruit et recupere, en respectant les eventuelles
+     * protections/claims d'autres plugins). Le Sea Lantern (Enclume
+     * Émeraude) est un cas particulier : voir plus bas.
      */
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
@@ -117,6 +124,20 @@ public class BlockProtectionListener implements Listener {
         if (hand == null || !isPickaxe(hand.getType())) {
             event.setCancelled(true);
             BelaCustoms.get().getMessagesManager().send(player, "enchants.blocks.need-pickaxe");
+            return;
+        }
+
+        // Material.SEA_LANTERN ne se drop JAMAIS lui-meme sous pioche sans
+        // Silk Touch en vanilla (il donne des Prismarine Crystals) : on
+        // reproduit donc manuellement un cassage "normal" qui redonne bien
+        // un Sea Lantern, exactement comme n'importe quel autre bloc mine a
+        // la pioche. Le Prismarine (Table d'Enchantement) se drop deja
+        // correctement lui-meme en vanilla : aucune intervention necessaire,
+        // on laisse l'evenement suivre son cours normal dans ce cas.
+        if (block.getType() == Material.SEA_LANTERN) {
+            event.setCancelled(true);
+            block.setType(Material.AIR);
+            block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.SEA_LANTERN));
         }
     }
 }
