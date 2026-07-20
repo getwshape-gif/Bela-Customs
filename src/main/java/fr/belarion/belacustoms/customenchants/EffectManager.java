@@ -26,6 +26,15 @@ import java.util.Set;
  * (item retire), l'effet correspondant est retire immediatement au lieu
  * d'attendre son expiration naturelle.
  *
+ * IMPORTANT (potions vanilla) : quand l'enchant n'est PAS/plus actif, on ne
+ * doit JAMAIS retirer aveuglement un effet du meme type present sur le
+ * joueur, car ce pourrait etre une vraie potion bue ou lancee (Speed,
+ * Strength, Fire Resistance, Haste sont des effets de potion vanilla tout a
+ * fait normaux). On ne retire donc que l'effet qui porte clairement la
+ * signature de notre propre effet permanent (duree residuelle enorme, voir
+ * OWN_EFFECT_DURATION_THRESHOLD) : une vraie potion, meme prolongee au
+ * Redstone, ne s'approche jamais de cette duree. Voir removeIfOwnEffect().
+ *
  * Anti Debuff n'est plus gere ici : la reactivite requise (bloquer un
  * debuff avant meme qu'il soit visible) est assuree par AntiDebuffGuardTask
  * (frequence tres elevee) et par le listener de protection anti-potion
@@ -37,6 +46,12 @@ public class EffectManager extends BukkitRunnable {
     private static final int LONG_DURATION = 1_000_000;
     /** Si la duree restante d'un effet descend sous ce seuil, on le rafraichit. */
     private static final int REFRESH_THRESHOLD = 40;
+    /**
+     * Seuil bien au-dessus de toute duree de potion vanilla realiste (meme
+     * prolongee au Redstone), utilise pour reconnaitre sans ambiguite un
+     * effet applique par ce manager avant de le retirer automatiquement.
+     */
+    private static final int OWN_EFFECT_DURATION_THRESHOLD = LONG_DURATION / 2;
 
     public static final PotionEffectType[] NEGATIVE_EFFECTS = new PotionEffectType[]{
             PotionEffectType.POISON,
@@ -85,8 +100,8 @@ public class EffectManager extends BukkitRunnable {
     private void applyOrRemove(Player player, boolean shouldBeActive, PotionEffectType type, int amplifier) {
         if (shouldBeActive) {
             applyPermanent(player, type, amplifier);
-        } else if (player.hasPotionEffect(type)) {
-            player.removePotionEffect(type);
+        } else {
+            removeIfOwnEffect(player, type);
         }
     }
 
@@ -105,6 +120,24 @@ public class EffectManager extends BukkitRunnable {
             }
         }
         player.addPotionEffect(new PotionEffect(type, LONG_DURATION, amplifier, true, false), true);
+    }
+
+    /**
+     * Retire l'effet du type donne UNIQUEMENT s'il s'agit clairement de
+     * notre propre effet permanent (duree residuelle enorme). Une vraie
+     * potion (bue ou lancee) du meme type, avec une duree vanilla normale,
+     * n'est jamais touchee : elle continue son cours normalement, comme
+     * n'importe quelle potion sur un joueur qui ne porte pas cet enchant.
+     */
+    private void removeIfOwnEffect(Player player, PotionEffectType type) {
+        for (PotionEffect existing : player.getActivePotionEffects()) {
+            if (existing.getType().equals(type)) {
+                if (existing.getDuration() > OWN_EFFECT_DURATION_THRESHOLD) {
+                    player.removePotionEffect(type);
+                }
+                return;
+            }
+        }
     }
 
     private void collect(ItemStack item, Set<CustomEnchant> into) {
