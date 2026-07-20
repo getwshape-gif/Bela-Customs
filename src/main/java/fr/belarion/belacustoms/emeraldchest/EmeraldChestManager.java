@@ -1,32 +1,43 @@
 package fr.belarion.belacustoms.emeraldchest;
 
 import fr.belarion.belacustoms.BelaCustoms;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * Gère la persistance de tous les Coffres en Émeraude posés sur le serveur :
- * position, contenu virtuel (54 slots, capacité double coffre) et nombre
- * d'explosions déjà subies. Stocké dans emerald-chests.yml, chargé au
- * démarrage et sauvegardé à chaque modification (pose/casse/explosion/
- * fermeture d'inventaire) pour survivre à un crash serveur sans perte de
- * données.
- *
- * Le bloc réel posé (Material.TRAPPED_CHEST) n'est JAMAIS ouvert via le
- * chemin vanilla : son tile entity reste toujours vide. Tout le contenu
- * "double coffre" est entièrement virtuel et géré ici, ce qui permet à un
- * Coffre en Émeraude de garder un inventaire totalement indépendant, même
- * d'un autre Coffre en Émeraude posé juste à côté (voir EmeraldChest pour le
- * détail du choix de Material).
- */
+* Gère la persistance de tous les Coffres en Émeraude posés sur le serveur :
+* position, contenu virtuel (54 slots, capacité double coffre) et nombre
+* d'explosions déjà subies. Stocké dans emerald-chests.yml, chargé au
+* démarrage et sauvegardé à chaque modification (pose/casse/explosion/
+* fermeture d'inventaire) pour survivre à un crash serveur sans perte de
+* données.
+*
+* Le bloc réel posé (Material.TRAPPED_CHEST) n'est JAMAIS ouvert via le
+* chemin vanilla : son tile entity reste toujours vide. Tout le contenu
+* "double coffre" est entièrement virtuel et géré ici, ce qui permet à un
+* Coffre en Émeraude de garder un inventaire totalement indépendant, même
+* d'un autre Coffre en Émeraude posé juste à côté (voir EmeraldChest pour le
+* détail du choix de Material).
+*
+* Cette indépendance FONCTIONNELLE ne suffit toutefois pas à empêcher la
+* fusion VISUELLE vanilla de deux TRAPPED_CHEST adjacents en un double
+* coffre (bug historique bien connu de Minecraft 1.8) : voir
+* ChestMergeGuard et EmeraldChestListener pour la protection dédiée, qui
+* s'appuie sur getTrackedLocationsInChunk() ci-dessous pour ré-appliquer la
+* protection à chaque chargement de chunk.
+*/
 public class EmeraldChestManager {
 
     public static final int SIZE = 54;
@@ -91,6 +102,34 @@ public class EmeraldChestManager {
         boolean destroyed = data.explosionHits >= MAX_EXPLOSIONS;
         save();
         return destroyed;
+    }
+
+    /**
+     * @return les positions de tous les Coffres en Émeraude tracés situés
+     * dans le chunk donné (monde + coordonnées de chunk). Utilisé par
+     * EmeraldChestListener au chargement d'un chunk pour ré-appliquer
+     * ChestMergeGuard sur des TileEntityChest fraîchement recréées (la
+     * protection précédente ne survit pas à un déchargement de chunk).
+     */
+    public List<Location> getTrackedLocationsInChunk(String worldName, int chunkX, int chunkZ) {
+        List<Location> result = new ArrayList<>();
+        World world = Bukkit.getWorld(worldName);
+        if (world == null) return result;
+
+        for (Map.Entry<String, ChestData> entry : chests.entrySet()) {
+            String[] parts = entry.getKey().split(";");
+            if (parts.length != 4 || !parts[0].equals(worldName)) continue;
+            try {
+                int x = Integer.parseInt(parts[1]);
+                int z = Integer.parseInt(parts[3]);
+                if ((x >> 4) != chunkX || (z >> 4) != chunkZ) continue;
+                int y = Integer.parseInt(parts[2]);
+                result.add(new Location(world, x, y, z));
+            } catch (NumberFormatException ignored) {
+                // clé invalide : on l'ignore simplement.
+            }
+        }
+        return result;
     }
 
     public void load() {
