@@ -27,21 +27,44 @@ import java.util.List;
 
 /**
  * Gère le cycle de vie complet du Coffre en Émeraude posé dans le monde :
- * - Pose : enregistre sa position dans EmeraldChestManager.
+ * - Pose : enregistre sa position dans EmeraldChestManager, puis force un
+ * Material (CHEST ou TRAPPED_CHEST) en damier pour empêcher toute fusion
+ * visuelle vanilla avec un autre Coffre en Émeraude adjacent (voir
+ * enforceCheckerboard ci-dessous).
  * - Ouverture : intercepte TOUJOURS le clic droit vanilla et ouvre à la
- *   place un inventaire virtuel de 54 slots — c'est ce qui garantit à la
- *   fois l'apparence "coffre simple" et la capacité "double coffre", et qui
- *   empêche toute fusion avec un coffre voisin puisque le vrai tile entity
- *   du bloc n'est jamais utilisé.
+ * place un inventaire virtuel de 54 slots — c'est ce qui garantit à la
+ * fois l'apparence "coffre simple" et la capacité "double coffre", et qui
+ * empêche toute fusion FONCTIONNELLE avec un coffre voisin puisque le
+ * vrai tile entity du bloc n'est jamais utilisé.
  * - Fermeture : sauvegarde le contenu de l'inventaire virtuel.
  * - Explosion : résiste à EmeraldChestManager.MAX_EXPLOSIONS (5) explosions
- *   de n'importe quelle source (TNT, Creeper, ou toute autre source côté
- *   serveur), puis est détruit normalement (comme n'importe quel bloc,
- *   contenu déversé au sol comme un vrai coffre vanilla détruit par une
- *   explosion).
+ * de n'importe quelle source (TNT, Creeper, ou toute autre source côté
+ * serveur), puis est détruit normalement (comme n'importe quel bloc,
+ * contenu déversé au sol comme un vrai coffre vanilla détruit par une
+ * explosion).
  * - Cassage : nécessite une pioche (comme les autres blocs premium du
- *   plugin, voir BlockProtectionListener), déverse le contenu au sol et
- *   redonne l'item Coffre en Émeraude au joueur.
+ * plugin, voir BlockProtectionListener), déverse le contenu au sol et
+ * redonne l'item Coffre en Émeraude au joueur.
+ *
+ * Fusion VISUELLE vanilla (double coffre) : contrairement à la fusion
+ * fonctionnelle ci-dessus (déjà gérée par l'inventaire virtuel), Minecraft
+ * 1.8 fusionne aussi visuellement deux blocs adjacents du MÊME Material
+ * (CHEST-CHEST ou TRAPPED_CHEST-TRAPPED_CHEST) en un seul modèle "double
+ * coffre", indépendamment de toute logique du plugin — c'est un
+ * comportement du moteur de rendu vanilla basé uniquement sur le Material
+ * réel des deux blocs. Comme CHEST et TRAPPED_CHEST ne fusionnent JAMAIS
+ * entre eux, on force un damier CHEST / TRAPPED_CHEST basé sur la parité
+ * de (x + z) : deux blocs orthogonalement adjacents ont toujours des
+ * coordonnées x+z de parité opposée, donc toujours un Material différent,
+ * donc jamais de fusion, quel que soit le nombre de Coffres en Émeraude
+ * posés côte à côte ou leur disposition (ligne, rangée complète, etc.).
+ * Aucune texture personnalisée n'existe à ce jour pour ce coffre (modèle
+ * vanilla par défaut, identique pour les deux Materials), ce choix de
+ * Material réel n'a donc aucun impact visuel autre que la suppression de
+ * la fusion. Le contenu (inventaire virtuel) et toutes les protections
+ * (cassage, explosion) fonctionnent à l'identique pour les deux Materials
+ * (voir isChestLike ci-dessous) : c'est une pure question d'anti-fusion,
+ * aucune autre mécanique n'est affectée.
  */
 public class EmeraldChestListener implements Listener {
 
@@ -49,6 +72,10 @@ public class EmeraldChestListener implements Listener {
 
     public EmeraldChestListener(EmeraldChestManager manager) {
         this.manager = manager;
+    }
+
+    private boolean isChestLike(Material type) {
+        return type == Material.TRAPPED_CHEST || type == Material.CHEST;
     }
 
     private boolean isPickaxe(Material type) {
@@ -63,14 +90,34 @@ public class EmeraldChestListener implements Listener {
     public void onPlace(BlockPlaceEvent event) {
         ItemStack item = event.getItemInHand();
         if (item == null || !EmeraldChest.ID.equals(NBTEditor.getCustomId(item))) return;
-        manager.track(event.getBlock().getLocation());
+
+        Block block = event.getBlock();
+        manager.track(block.getLocation());
+        enforceCheckerboard(block);
+    }
+
+    /**
+     * Force le Material du bloc posé (CHEST ou TRAPPED_CHEST) selon la
+     * parité de (x + z) de sa position, afin qu'il ne partage jamais le
+     * même Material qu'un voisin orthogonal — voir la javadoc de la
+     * classe pour le détail du raisonnement.
+     */
+    private void enforceCheckerboard(Block block) {
+        Material desired = Math.floorMod(block.getX() + block.getZ(), 2) == 0
+                ? Material.TRAPPED_CHEST
+                : Material.CHEST;
+        if (block.getType() != desired) {
+            byte data = block.getData();
+            block.setType(desired);
+            block.setData(data);
+        }
     }
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         Block block = event.getClickedBlock();
-        if (block == null || block.getType() != Material.TRAPPED_CHEST) return;
+        if (block == null || !isChestLike(block.getType())) return;
         if (!manager.isTracked(block.getLocation())) return;
 
         event.setCancelled(true);
@@ -97,7 +144,7 @@ public class EmeraldChestListener implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
-        if (block.getType() != Material.TRAPPED_CHEST) return;
+        if (!isChestLike(block.getType())) return;
         if (!manager.isTracked(block.getLocation())) return;
 
         Player player = event.getPlayer();
@@ -109,7 +156,7 @@ public class EmeraldChestListener implements Listener {
         }
 
         // Cassage gere entierement a la main : le drop naturel vanilla d'un
-        // TRAPPED_CHEST ne correspond pas a notre item custom (nom/lore/NBT),
+        // CHEST/TRAPPED_CHEST ne correspond pas a notre item custom (nom/lore/NBT),
         // on l'empeche donc et on redonne explicitement le bon item.
         event.setCancelled(true);
         Location loc = block.getLocation();
@@ -133,7 +180,7 @@ public class EmeraldChestListener implements Listener {
         Iterator<Block> it = blocks.iterator();
         while (it.hasNext()) {
             Block block = it.next();
-            if (block.getType() != Material.TRAPPED_CHEST) continue;
+            if (!isChestLike(block.getType())) continue;
             Location loc = block.getLocation();
             if (!manager.isTracked(loc)) continue;
 
