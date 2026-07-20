@@ -20,27 +20,25 @@ import java.util.List;
  * Protège les deux blocs premium partagés par la Table d'Enchantement
  * Émeraude et l'Enclume Émeraude :
  * - insensibles à TOUTES les explosions (TNT / Creeper / autres) : ce sont
- *   des blocs premium résistants aux explosions, jamais des blocs
- *   totalement indestructibles.
- *
- * Cette protection s'applique au Material EMERALD_BLOCK dans son ensemble,
- * ce qui couvre donc AUSSI le Bloc d'Émeraude Renforcé une fois posé (voir
- * ReinforcedEmeraldBlock) : Bukkit 1.8 ne conserve pas le NBT d'un item sur
- * le bloc pose (pas de tile entity pour un bloc plein), donc un Bloc
- * d'Émeraude Renforcé posé est un EMERALD_BLOCK comme les autres et
- * beneficie automatiquement de cette meme resistance aux explosions/pistons
- * et de la regle "cassable uniquement a la pioche".
+ * des blocs premium résistants aux explosions, jamais des blocs
+ * totalement indestructibles.
  * - impossibles à déplacer par un piston.
  * - cassables normalement par un joueur avec une pioche (comme n'importe
- *   quel bloc solide), en respectant les protections/claims externes
- *   puisque l'événement n'est jamais annulé dans ce cas : le bloc est bien
- *   détruit et récupéré par le joueur.
+ * quel bloc solide), en respectant les protections/claims externes
+ * puisque l'événement n'est jamais annulé dans ce cas : le bloc est bien
+ * détruit et récupéré par le joueur.
  *
- * L'Enclume Émeraude (Sea Lantern) n'est pas une vraie enclume vanilla —
- * c'est un bloc déclencheur qui ouvre un GUI 100% custom avec un coût fixe
- * en niveaux. Il n'existe donc aucun état "endommagée / très endommagée /
- * détruite" à gérer : elle reste structurellement toujours "parfaite",
- * sans le moindre code supplémentaire nécessaire.
+ * Bloc de la Table d'Enchantement Émeraude : Material.PRISMARINE avec
+ * data 2 (Dark Prismarine) — remplace l'ancien Material.EMERALD_BLOCK.
+ * Seule cette variante précise (data 2) est protégée : un Prismarine ou
+ * Prismarine Bricks (data 0/1) classique reste un bloc vanilla normal.
+ *
+ * Bloc de l'Enclume Émeraude : Material.SEA_LANTERN. Ce n'est pas une
+ * vraie enclume vanilla — c'est un bloc déclencheur qui ouvre un GUI 100%
+ * custom avec un coût fixe en niveaux. Il n'existe donc aucun état
+ * "endommagée / très endommagée / détruite" à gérer : elle reste
+ * structurellement toujours "parfaite", sans le moindre code
+ * supplémentaire nécessaire.
  *
  * Listener volontairement placé au niveau du package `listeners` (et non
  * dans `emeraldanvil` ou `emeraldenchanttable`) car il protège les DEUX
@@ -49,8 +47,10 @@ import java.util.List;
  */
 public class BlockProtectionListener implements Listener {
 
-    private boolean isProtected(Material type) {
-        return type == Material.EMERALD_BLOCK || type == Material.SEA_LANTERN;
+    private boolean isProtected(Block block) {
+        Material type = block.getType();
+        if (type == Material.SEA_LANTERN) return true;
+        return type == Material.PRISMARINE && block.getData() == 2;
     }
 
     private boolean isPickaxe(Material type) {
@@ -74,7 +74,7 @@ public class BlockProtectionListener implements Listener {
     private void filter(List<Block> blocks) {
         Iterator<Block> it = blocks.iterator();
         while (it.hasNext()) {
-            if (isProtected(it.next().getType())) {
+            if (isProtected(it.next())) {
                 it.remove();
             }
         }
@@ -83,7 +83,7 @@ public class BlockProtectionListener implements Listener {
     @EventHandler
     public void onPistonExtend(BlockPistonExtendEvent event) {
         for (Block block : event.getBlocks()) {
-            if (isProtected(block.getType())) {
+            if (isProtected(block)) {
                 event.setCancelled(true);
                 return;
             }
@@ -93,7 +93,7 @@ public class BlockProtectionListener implements Listener {
     @EventHandler
     public void onPistonRetract(BlockPistonRetractEvent event) {
         for (Block block : event.getBlocks()) {
-            if (isProtected(block.getType())) {
+            if (isProtected(block)) {
                 event.setCancelled(true);
                 return;
             }
@@ -109,8 +109,8 @@ public class BlockProtectionListener implements Listener {
      */
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
-        Material type = event.getBlock().getType();
-        if (!isProtected(type)) return;
+        Block block = event.getBlock();
+        if (!isProtected(block)) return;
 
         Player player = event.getPlayer();
         ItemStack hand = player.getItemInHand();
