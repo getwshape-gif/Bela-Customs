@@ -6,21 +6,24 @@ import fr.belarion.belacustoms.customitems.config.ItemTexture;
 import fr.belarion.belacustoms.customitems.config.ItemTextureRegistry;
 import fr.belarion.belacustoms.utils.ItemTier;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Pioche emeraude renforcee : Efficacite II offerte de base (superieure a la
- * pioche emeraude simple), Unbreakable.
+ * Pioche emeraude renforcee : Unbreakable.
+ *
+ * Donnee sans aucun enchantement de base (voir demande du 20/07/2026) :
+ * l'item reste normalement enchantable ensuite via table d'enchantement,
+ * enclume ou livres (compatible avec tous les enchantements vanilla
+ * jusqu'a Efficacite V comme n'importe quel autre outil).
  *
  * Note sur les paliers annonces dans le cahier des charges (Obsidienne
  * ~2s avec Efficacite V, Packed Ice / Mossy Cobblestone one-shot avec
  * Efficacite V + Haste II) : ce sont les temps de minage vanilla reels
- * obtenus des lors que le joueur combine cette pioche (compatible avec les
- * enchantements vanilla jusqu'a Efficacite V) avec l'effet de potion Haste II.
- * Aucune surcouche n'est necessaire : la pioche etant compatible avec tous
- * les enchantements vanilla et deja plus rapide qu'une pioche diamant de
- * base, ces paliers sont atteints naturellement par le moteur de Minecraft.
+ * obtenus des lors que le joueur combine cette pioche, une fois enchantee
+ * par ses soins, avec l'effet de potion Haste II. Aucune surcouche n'est
+ * necessaire : la pioche etant compatible avec tous les enchantements
+ * vanilla et deja plus rapide qu'une pioche diamant de base, ces paliers
+ * restent atteignables naturellement par le moteur de Minecraft.
  */
 public class ReinforcedEmeraldPickaxe implements CustomItem {
 
@@ -50,7 +53,6 @@ public class ReinforcedEmeraldPickaxe implements CustomItem {
                 .progression(true)
                 .loreLines("&7Minage ultra rapide.", "&7Maîtrise les blocs résistants.")
                 .unbreakableTag()
-                .enchant(Enchantment.DIG_SPEED, 2)
                 .unbreakable(true)
                 .tier(ItemTier.EMERALD_RENFORCE)
                 .customId(ID)
