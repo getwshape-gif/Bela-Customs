@@ -13,12 +13,16 @@ Emeraude, Enclume Emeraude, Bibliotheque d'Enchants paginee.
 
 **Custom Items** (21) : Hammer / Pioche / Pelle / Hache / Houe / Epee en
 Emeraude et en Emeraude Renforce, armure complete (casque/plastron/
-jambieres/bottes) en Emeraude et Emeraude Renforce, Bloc d'Emeraude
-Renforce.
+jambieres/bottes) en Emeraude et Emeraude Renforce, Emeraude Renforcee
+(monnaie haut de gamme du serveur, sans capacite speciale).
 
-**Blocs speciaux** : Table d'Enchantement Emeraude (clic-droit sur Bloc
-d'Emeraude), Enclume Emeraude (clic-droit sur Sea Lantern), tous deux
-proteges contre explosions/pistons et cassables uniquement a la pioche.
+**Blocs speciaux** : Table d'Enchantement Emeraude (clic-droit sur
+Prismarine:2 / Dark Prismarine), Enclume Emeraude (clic-droit sur Sea
+Lantern), tous deux proteges contre explosions/pistons et cassables
+uniquement a la pioche. Coffre en Emeraude : apparence de coffre simple
+mais capacite de double coffre (54 slots), avec protection dediee contre
+la fusion visuelle vanilla en double coffre lorsque plusieurs sont poses
+cote a cote (voir emeraldchest.ChestMergeGuard).
 
 ## Architecture
 
@@ -31,6 +35,7 @@ fr.belarion.belacustoms
 ├── customenchants/              CustomEnchant, stockage multi-enchant, effets passifs
 ├── customitems/                 config/manager/items.* (tools, armor, weapons, misc)
 ├── emeraldanvil/                logique de l'Enclume Emeraude
+├── emeraldchest/                logique du Coffre en Emeraude + protection anti-fusion
 ├── emeraldenchanttable/         logique de la Table d'Enchantement Emeraude
 ├── gui/                         rendu de toutes les interfaces (table, enclume, bibliotheque)
 ├── listeners/                   listeners par domaine (enchant/, item/) + protection des blocs
@@ -62,9 +67,8 @@ Le jar compile se trouve dans `target/Bela-Customs.jar`.
 
 ## Notes de migration
 
-- Toutes les permissions sont desormais prefixees `belacustoms.*`
-  (`belacustoms.admin`, `belacustoms.enchants`, `belacustoms.items.admin`,
-  `belacustoms.items.use`). Mettez a jour vos groupes de permissions.
+- Toutes les permissions sont desormais prefixees `belacustoms.*` (`belacustoms.admin`, `belacustoms.enchants`, `belacustoms.items.admin`,
+`belacustoms.items.use`). Mettez a jour vos groupes de permissions.
 - La commande admin principale est renommee `/belacustoms` (etait
-  `/belarionenchants`).
+`/belarionenchants`).
 - `/citem` est conservee telle quelle.
