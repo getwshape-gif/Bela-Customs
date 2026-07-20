@@ -1,7 +1,7 @@
 # =====================================================
-#  Bela-Customs - custom-items.yml
-#  Statistiques des Custom Items (tier Émeraude / Émeraude Renforcé) et
-#  mapping de textures (resource pack 1.8).
+# Bela-Customs - custom-items.yml
+# Statistiques des Custom Items (tier Émeraude / Émeraude Renforcé) et
+# mapping de textures (resource pack 1.8).
 # =====================================================
 
 stats:
@@ -45,10 +45,10 @@ stats:
 # Damage Value. Exemple pour EMERALD_HAMMER (assets/minecraft/optifine/cit/
 # emerald_hammer.properties) :
 #
-#   type=item
-#   items=diamond_pickaxe
-#   nbt.CustomItemId=EMERALD_HAMMER
-#   texture=emerald_hammer
+# type=item
+# items=diamond_pickaxe
+# nbt.CustomItemId=EMERALD_HAMMER
+# texture=emerald_hammer
 #
 # Attention à ne PAS écrire "nbt.tag.CustomItemId=..." (segment ".tag."
 # en trop, la règle CIT ne matcherait jamais) : voir NBTEditor.CUSTOM_ID_KEY.
@@ -75,5 +75,12 @@ textures:
   EMERALD_BOOTS: {material: DIAMOND_BOOTS, durability: 1019}
   REINFORCED_EMERALD_BOOTS: {material: DIAMOND_BOOTS, durability: 1020}
 
-EMERALD_ENCHANT_TABLE: {material: EMERALD_BLOCK, durability: 1021}
-EMERALD_ANVIL: {material: SEA_LANTERN, durability: 1022}
+  # EMERALD_ENCHANT_TABLE : bloc de référence déplacé du Bloc d'Émeraude vers
+  # Prismarine:2 (Dark Prismarine). Exception au commentaire ci-dessus sur
+  # "durability" : ce material est un BLOC sans usure réelle
+  # (getMaxDurability() == 0), donc ce champ représente ici une vraie valeur
+  # de data vanilla (2 = Dark Prismarine) et EST bien appliquée au build
+  # (voir EmeraldEnchantTableItem.build()), contrairement aux outils/armures
+  # où ce même champ reste ignoré.
+  EMERALD_ENCHANT_TABLE: {material: PRISMARINE, durability: 2}
+  EMERALD_ANVIL: {material: SEA_LANTERN, durability: 1022}
