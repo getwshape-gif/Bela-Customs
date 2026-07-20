@@ -55,7 +55,11 @@ public final class EnchantLibraryGUI {
         if (page > maxPage) page = maxPage;
 
         Inventory inv = Bukkit.createInventory(null, 27, TITLE);
-        GuiUtil.fillPremiumBackground(inv, new int[]{0, 8, 9, 26});
+        // Slot 17 : vitre situee juste au-dessus de la fleche "page suivante"
+        // (slot 26) ; ajoutee ici en accent vert pour correspondre exactement
+        // aux autres vitres vertes du GUI (elle restait auparavant grise,
+        // seule vitre non accentuee de tout le fond premium).
+        GuiUtil.fillPremiumBackground(inv, new int[]{0, 8, 9, 17, 26});
 
         ItemStack back = GuiUtil.button(Material.ARROW, ChatColor.WHITE, "Retour",
                 GuiUtil.SEPARATOR, ChatColor.GRAY + "Retour à la table.", GuiUtil.SEPARATOR);
