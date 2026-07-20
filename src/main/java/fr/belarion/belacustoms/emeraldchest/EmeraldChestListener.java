@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,46 +28,50 @@ import java.util.List;
 
 /**
  * Gère le cycle de vie complet du Coffre en Émeraude posé dans le monde :
- * - Pose : enregistre sa position dans EmeraldChestManager, puis force un
- * Material (CHEST ou TRAPPED_CHEST) en damier pour empêcher toute fusion
- * visuelle vanilla avec un autre Coffre en Émeraude adjacent (voir
- * enforceCheckerboard ci-dessous).
- * - Ouverture : intercepte TOUJOURS le clic droit vanilla et ouvre à la
- * place un inventaire virtuel de 54 slots — c'est ce qui garantit à la
- * fois l'apparence "coffre simple" et la capacité "double coffre", et qui
- * empêche toute fusion FONCTIONNELLE avec un coffre voisin puisque le
- * vrai tile entity du bloc n'est jamais utilisé.
+ * - Pose : refusée si un autre Coffre en Émeraude est déjà présent sur un
+ *   côté horizontal adjacent (voir hasAdjacentEmeraldChest ci-dessous),
+ *   sinon enregistre sa position dans EmeraldChestManager. Le bloc reste
+ *   toujours Material.TRAPPED_CHEST (jamais changé), pour que la texture
+ *   du pack de ressources s'applique systématiquement.
+ * - Ouverture : intercepte le clic droit vanilla (sauf si le joueur est en
+ *   train de sneak, voir plus bas) et ouvre à la place un inventaire
+ *   virtuel de 54 slots — c'est ce qui garantit à la fois l'apparence
+ *   "coffre simple" et la capacité "double coffre", et qui empêche toute
+ *   fusion FONCTIONNELLE avec un coffre voisin puisque le vrai tile entity
+ *   du bloc n'est jamais utilisé.
  * - Fermeture : sauvegarde le contenu de l'inventaire virtuel.
  * - Explosion : résiste à EmeraldChestManager.MAX_EXPLOSIONS (5) explosions
- * de n'importe quelle source (TNT, Creeper, ou toute autre source côté
- * serveur), puis est détruit normalement (comme n'importe quel bloc,
- * contenu déversé au sol comme un vrai coffre vanilla détruit par une
- * explosion).
+ *   de n'importe quelle source (TNT, Creeper, ou toute autre source côté
+ *   serveur), puis est détruit normalement (comme n'importe quel bloc,
+ *   contenu déversé au sol comme un vrai coffre vanilla détruit par une
+ *   explosion).
  * - Cassage : nécessite une pioche (comme les autres blocs premium du
- * plugin, voir BlockProtectionListener), déverse le contenu au sol et
- * redonne l'item Coffre en Émeraude au joueur.
+ *   plugin, voir BlockProtectionListener), déverse le contenu au sol et
+ *   redonne l'item Coffre en Émeraude au joueur.
  *
- * Fusion VISUELLE vanilla (double coffre) : contrairement à la fusion
- * fonctionnelle ci-dessus (déjà gérée par l'inventaire virtuel), Minecraft
- * 1.8 fusionne aussi visuellement deux blocs adjacents du MÊME Material
- * (CHEST-CHEST ou TRAPPED_CHEST-TRAPPED_CHEST) en un seul modèle "double
- * coffre", indépendamment de toute logique du plugin — c'est un
- * comportement du moteur de rendu vanilla basé uniquement sur le Material
- * réel des deux blocs. Comme CHEST et TRAPPED_CHEST ne fusionnent JAMAIS
- * entre eux, on force un damier CHEST / TRAPPED_CHEST basé sur la parité
- * de (x + z) : deux blocs orthogonalement adjacents ont toujours des
- * coordonnées x+z de parité opposée, donc toujours un Material différent,
- * donc jamais de fusion, quel que soit le nombre de Coffres en Émeraude
- * posés côte à côte ou leur disposition (ligne, rangée complète, etc.).
- * Aucune texture personnalisée n'existe à ce jour pour ce coffre (modèle
- * vanilla par défaut, identique pour les deux Materials), ce choix de
- * Material réel n'a donc aucun impact visuel autre que la suppression de
- * la fusion. Le contenu (inventaire virtuel) et toutes les protections
- * (cassage, explosion) fonctionnent à l'identique pour les deux Materials
- * (voir isChestLike ci-dessous) : c'est une pure question d'anti-fusion,
- * aucune autre mécanique n'est affectée.
+ * Fusion VISUELLE vanilla (double coffre) : Minecraft 1.8 fusionne
+ * TOUJOURS visuellement deux blocs adjacents du MÊME Material (ici
+ * TRAPPED_CHEST-TRAPPED_CHEST) en un seul modèle "double coffre",
+ * indépendamment de toute logique du plugin — c'est un comportement du
+ * moteur de rendu vanilla basé uniquement sur le Material réel des deux
+ * blocs, qu'aucun pack de ressources ni code serveur ne peut annuler tant
+ * que le Material reste identique des deux côtés. Une précédente tentative
+ * consistait à alterner CHEST/TRAPPED_CHEST en damier pour casser cette
+ * égalité de Material ; elle a été abandonnée car seul TRAPPED_CHEST porte
+ * la texture personnalisée du Coffre en Émeraude dans le pack de
+ * ressources du serveur, ce qui faisait apparaître un coffre sur deux avec
+ * l'apparence vanilla par défaut. La pose est donc désormais tout
+ * simplement refusée quand elle collerait deux Coffres en Émeraude
+ * ensemble (voir onPlace), ce qui garantit à la fois une texture toujours
+ * correcte et l'absence totale de fusion, sans dépendre du pack de
+ * ressources ni de paquets réseau bas niveau.
  */
 public class EmeraldChestListener implements Listener {
+
+    /** Aucune fusion verticale n'existe en vanilla : seuls les 4 côtés horizontaux comptent. */
+    private static final BlockFace[] HORIZONTAL_FACES = {
+            BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST
+    };
 
     private final EmeraldChestManager manager;
 
@@ -86,31 +91,38 @@ public class EmeraldChestListener implements Listener {
                 || type == Material.DIAMOND_PICKAXE;
     }
 
+    /**
+     * Vrai si un Coffre en Émeraude déjà posé et suivi par le manager se
+     * trouve sur l'un des 4 côtés horizontaux du bloc donné.
+     */
+    private boolean hasAdjacentEmeraldChest(Block block) {
+        for (BlockFace face : HORIZONTAL_FACES) {
+            Block neighbor = block.getRelative(face);
+            if (isChestLike(neighbor.getType()) && manager.isTracked(neighbor.getLocation())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @EventHandler
     public void onPlace(BlockPlaceEvent event) {
         ItemStack item = event.getItemInHand();
         if (item == null || !EmeraldChest.ID.equals(NBTEditor.getCustomId(item))) return;
 
         Block block = event.getBlock();
-        manager.track(block.getLocation());
-        enforceCheckerboard(block);
-    }
 
-    /**
-     * Force le Material du bloc posé (CHEST ou TRAPPED_CHEST) selon la
-     * parité de (x + z) de sa position, afin qu'il ne partage jamais le
-     * même Material qu'un voisin orthogonal — voir la javadoc de la
-     * classe pour le détail du raisonnement.
-     */
-    private void enforceCheckerboard(Block block) {
-        Material desired = Math.floorMod(block.getX() + block.getZ(), 2) == 0
-                ? Material.TRAPPED_CHEST
-                : Material.CHEST;
-        if (block.getType() != desired) {
-            byte data = block.getData();
-            block.setType(desired);
-            block.setData(data);
+        // Empeche la pose collee a un autre Coffre en Emeraude : voir la
+        // javadoc de la classe pour le raisonnement complet (fusion
+        // visuelle vanilla impossible a eviter autrement sans casser la
+        // texture du pack de ressources).
+        if (hasAdjacentEmeraldChest(block)) {
+            event.setCancelled(true);
+            BelaCustoms.get().getMessagesManager().send(event.getPlayer(), "emerald-chest.too-close");
+            return;
         }
+
+        manager.track(block.getLocation());
     }
 
     @EventHandler
@@ -120,8 +132,15 @@ public class EmeraldChestListener implements Listener {
         if (block == null || !isChestLike(block.getType())) return;
         if (!manager.isTracked(block.getLocation())) return;
 
-        event.setCancelled(true);
         Player player = event.getPlayer();
+
+        // Convention vanilla : un clic droit en sneak sur un conteneur ne
+        // l'ouvre jamais, afin de permettre de poser un bloc contre lui
+        // (au-dessus, en-dessous, sur un cote, etc.). On laisse simplement
+        // l'evenement suivre son cours normal dans ce cas (pas de GUI).
+        if (player.isSneaking()) return;
+
+        event.setCancelled(true);
         Location loc = block.getLocation();
 
         Inventory inv = Bukkit.createInventory(
