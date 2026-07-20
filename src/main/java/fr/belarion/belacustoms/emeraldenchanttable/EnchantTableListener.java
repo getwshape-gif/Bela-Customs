@@ -3,6 +3,7 @@ package fr.belarion.belacustoms.emeraldenchanttable;
 import fr.belarion.belacustoms.gui.emeraldenchanttable.EnchantLibraryGUI;
 import fr.belarion.belacustoms.gui.emeraldenchanttable.EnchantTableGUI;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,17 +18,22 @@ import java.util.Map;
 
 /**
  * Gère tout le cycle de vie de la Table d'Enchantement Émeraude :
- * ouverture (clic droit sur un Bloc d'Émeraude), clics dans la table et
- * dans la bibliothèque d'enchants (avec pagination), fermeture (rend le
- * livre posé).
+ * ouverture (clic droit sur un bloc Prismarine avec data 2, c'est-à-dire
+ * Dark Prismarine — bloc de référence depuis le remplacement du Bloc
+ * d'Émeraude), clics dans la table et dans la bibliothèque d'enchants
+ * (avec pagination), fermeture (rend le livre posé).
  */
 public class EnchantTableListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (event.getClickedBlock() == null) return;
-        if (event.getClickedBlock().getType() != Material.EMERALD_BLOCK) return;
+        Block block = event.getClickedBlock();
+        if (block == null) return;
+        // Dark Prismarine (Material.PRISMARINE, data 2) : voir
+        // custom-items.yml (EMERALD_ENCHANT_TABLE) et
+        // emerald_enchant_table.properties pour le reste du mapping.
+        if (block.getType() != Material.PRISMARINE || block.getData() != 2) return;
 
         event.setCancelled(true);
         event.getPlayer().openInventory(EnchantTableGUI.build());
