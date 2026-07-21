@@ -56,6 +56,3 @@ items:
   id-result: "&7Identifiant : &f%id%"
   player-only-subcommand: "&cCette sous-commande n'est utilisable que par un joueur."
 
-
-emerald-chest:
-  too-close: "&cImpossible de poser un Coffre en Émeraude directement à côté d'un autre (laisse au moins 1 bloc d'écart)."
