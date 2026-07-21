@@ -20,7 +20,7 @@ import java.util.Map;
  * fermeture d'inventaire) pour survivre à un crash serveur sans perte de
  * données.
  *
- * Le bloc réel posé (Material.TRAPPED_CHEST) n'est JAMAIS ouvert via le
+ * Le bloc réel posé (Material.ENDER_CHEST) n'est JAMAIS ouvert via le
  * chemin vanilla : son tile entity reste toujours vide. Tout le contenu
  * "double coffre" est entièrement virtuel et géré ici, ce qui permet à un
  * Coffre en Émeraude de garder un inventaire totalement indépendant, même
