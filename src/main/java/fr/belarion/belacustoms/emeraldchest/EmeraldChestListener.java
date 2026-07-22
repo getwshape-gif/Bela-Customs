@@ -83,11 +83,18 @@ private boolean isPickaxe(Material type) {
         if (block == null || block.getType() != Material.ENDER_CHEST) return;
         if (!manager.isTracked(block.getLocation())) return;
 
-    event.setCancelled(true);
-        Player player = event.getPlayer();
-        Location loc = block.getLocation();
-
-    Inventory inv = Bukkit.createInventory(
+Player player = event.getPlayer();
+       
+       // Convention vanilla : un clic droit en sneak sur un conteneur ne
+       // l'ouvre jamais, afin de permettre de poser un bloc ou un coffre
+       // contre lui (au-dessus, en-dessous, sur un cote, etc.). On laisse
+       // simplement l'evenement suivre son cours normal dans ce cas (pas de GUI).
+       if (player.isSneaking()) return;
+       
+       event.setCancelled(true);
+       Location loc = block.getLocation();
+       
+       Inventory inv = Bukkit.createInventory(
         new EmeraldChestHolder(loc),
         EmeraldChestManager.SIZE,
         ChatColor.DARK_GREEN.toString() + ChatColor.BOLD + "✦ Coffre en Émeraude ✦"
